@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-07-07
+
+### Added
+
+- Installed and configured NextAuth.js (Auth.js) with credentials authentication provider.
+- Created `src/lib/auth.ts` with custom authorize logic connected to SQLite DB.
+- Created registration API endpoint `/api/auth/register` with input validation, password hashing, and user creation.
+- Implemented responsive glassmorphism auth pages for Sign In (`/auth/signin`) and Sign Up (`/auth/signup`).
+- Created Client Provider wrapper for NextAuth Session and wrapped root layout.
+- Added custom TypeScript definition extensions for NextAuth session user IDs.
+
 ## [0.2.0] - 2026-07-07
 
 ### Added
