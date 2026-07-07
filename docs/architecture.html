@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Book - System Diagrams &amp; Architecture</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --accent: #38bdf8;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --card-bg: rgba(30, 41, 59, 0.7);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1.5rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(to right, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle { font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+    .container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      width: 100%;
+      flex-grow: 1;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      background-color: var(--bg-secondary);
+      padding: 0.375rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--border-color);
+      margin-bottom: 2rem;
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.75rem 1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .tab-btn:hover { color: var(--text-main); background-color: rgba(255,255,255,0.05); }
+
+    .tab-btn.active {
+      color: var(--bg-primary);
+      background-color: var(--accent);
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
+    }
+
+    .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+    .tab-content.active { display: block; }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
+      backdrop-filter: blur(8px);
+    }
+
+    .card-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; }
+
+    .card-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+
+    /* Zoom Controls */
+    .zoom-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      justify-content: flex-end;
+    }
+
+    .zoom-btn {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      width: 36px;
+      height: 36px;
+      border-radius: 0.5rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+      font-family: inherit;
+      line-height: 1;
+    }
+
+    .zoom-btn:hover {
+      background-color: var(--accent);
+      color: var(--bg-primary);
+      border-color: var(--accent);
+    }
+
+    .zoom-btn:active { transform: scale(0.92); }
+
+    .zoom-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      min-width: 48px;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .zoom-btn-reset {
+      background-color: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 0.35rem 0.75rem;
+      border-radius: 0.5rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+      margin-left: 0.25rem;
+    }
+
+    .zoom-btn-reset:hover {
+      color: var(--text-main);
+      border-color: var(--text-muted);
+    }
+
+    /* Diagram Viewport */
+    .diagram-viewport {
+      background-color: rgba(15, 23, 42, 0.6);
+      border-radius: 0.75rem;
+      border: 1px solid var(--border-color);
+      overflow: auto;
+      min-height: 500px;
+      max-height: 75vh;
+      position: relative;
+      cursor: grab;
+    }
+
+    .diagram-viewport:active { cursor: grabbing; }
+
+    .diagram-inner {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 2rem;
+      transform-origin: center top;
+      transition: transform 0.2s ease;
+      min-width: 100%;
+      min-height: 100%;
+    }
+
+    .diagram-inner svg {
+      max-width: none !important;
+      height: auto !important;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border-color);
+      margin-top: auto;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Account Book — System Diagrams &amp; Architecture</h1>
+    <div class="subtitle">Next.js + Drizzle ORM + SQLite + TailwindCSS v4</div>
+  </header>
+
+  <div class="container">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(event, 'architecture')">System Architecture</button>
+      <button class="tab-btn" onclick="switchTab(event, 'erd')">Entity Relationship (ERD)</button>
+      <button class="tab-btn" onclick="switchTab(event, 'sequence')">Sequence (Transfer Flow)</button>
+    </div>
+
+    <!-- Tab 1: System Architecture -->
+    <div id="architecture" class="tab-content active">
+      <div class="card">
+        <div class="card-title">System Architecture Diagram</div>
+        <div class="card-desc">Architecture overview from Browser Client through Next.js Server to SQLite Database Layer</div>
+        <div class="zoom-controls">
+          <button class="zoom-btn" onclick="zoom('arch', -0.2)" title="Zoom Out">−</button>
+          <span class="zoom-label" id="zoom-label-arch">100%</span>
+          <button class="zoom-btn" onclick="zoom('arch', 0.2)" title="Zoom In">+</button>
+          <button class="zoom-btn-reset" onclick="zoomReset('arch')">Reset</button>
+        </div>
+        <div class="diagram-viewport" id="viewport-arch">
+          <div class="diagram-inner" id="inner-arch">
+            <div id="diagram-arch"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: ERD -->
+    <div id="erd" class="tab-content">
+      <div class="card">
+        <div class="card-title">Database ER Diagram</div>
+        <div class="card-desc">Entity relationships between Users, Accounts, Categories, and Transactions tables in SQLite</div>
+        <div class="zoom-controls">
+          <button class="zoom-btn" onclick="zoom('erd', -0.2)" title="Zoom Out">−</button>
+          <span class="zoom-label" id="zoom-label-erd">100%</span>
+          <button class="zoom-btn" onclick="zoom('erd', 0.2)" title="Zoom In">+</button>
+          <button class="zoom-btn-reset" onclick="zoomReset('erd')">Reset</button>
+        </div>
+        <div class="diagram-viewport" id="viewport-erd">
+          <div class="diagram-inner" id="inner-erd">
+            <div id="diagram-erd"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Sequence -->
+    <div id="sequence" class="tab-content">
+      <div class="card">
+        <div class="card-title">Transfer Balance — Sequence Diagram</div>
+        <div class="card-desc">Step-by-step flow when a user transfers money between two accounts including validation and rollback</div>
+        <div class="zoom-controls">
+          <button class="zoom-btn" onclick="zoom('seq', -0.2)" title="Zoom Out">−</button>
+          <span class="zoom-label" id="zoom-label-seq">100%</span>
+          <button class="zoom-btn" onclick="zoom('seq', 0.2)" title="Zoom In">+</button>
+          <button class="zoom-btn-reset" onclick="zoomReset('seq')">Reset</button>
+        </div>
+        <div class="diagram-viewport" id="viewport-seq">
+          <div class="diagram-inner" id="inner-seq">
+            <div id="diagram-seq"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>&copy; 2026 Account Book App — Architecture &amp; Design Documentation</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: 'loose',
+      theme: 'dark',
+      themeVariables: {
+        background: '#0f172a',
+        primaryColor: '#334155',
+        primaryTextColor: '#f8fafc',
+        primaryBorderColor: '#64748b',
+        lineColor: '#64748b',
+        secondaryColor: '#1e293b',
+        tertiaryColor: '#1e293b',
+        fontSize: '16px'
+      }
+    });
+
+    const diagrams = {
+      'diagram-arch': `graph TD
+    subgraph Client["Browser / Frontend"]
+        UI["React UI - Next.js Pages"]
+        Tailwind["TailwindCSS v4 Styles"]
+        Components["Client and Server Components"]
+        UI --> Tailwind
+        UI --> Components
+    end
+
+    subgraph Server["Next.js Backend Server"]
+        Auth["NextAuth.js - Session Guard"]
+        Router["API Routes and Server Actions"]
+        Logic["Business Logic and Calculations"]
+        Auth --> Router
+        Router --> Logic
+    end
+
+    subgraph Database["Storage Layer"]
+        DrizzleORM["Drizzle ORM Client"]
+        LibSQL["libsql client - SQLite Driver"]
+        DBFile[("SQLite DB - local.db")]
+        InMemoryDB[("In-Memory SQLite - Testing")]
+        DrizzleORM --> LibSQL
+        LibSQL --> DBFile
+        DrizzleORM -.-> InMemoryDB
+    end
+
+    UI -->|"HTTPS / Server Actions"| Auth
+    Logic --> DrizzleORM`,
+
+      'diagram-erd': `erDiagram
+    USERS {
+        string id PK
+        string email
+        string password_hash
+        string name
+        int created_at
+    }
+
+    ACCOUNTS {
+        string id PK
+        string name
+        string type
+        float balance
+        string user_id FK
+        int created_at
+    }
+
+    CATEGORIES {
+        string id PK
+        string name
+        string type
+        string color
+        string icon
+        string user_id FK
+        int created_at
+    }
+
+    TRANSACTIONS {
+        string id PK
+        float amount
+        string type
+        string description
+        int date
+        string user_id FK
+        string account_id FK
+        string category_id FK
+        string from_account_id FK
+        string to_account_id FK
+        int created_at
+    }
+
+    USERS ||--o{ ACCOUNTS : "owns"
+    USERS ||--o{ CATEGORIES : "manages"
+    USERS ||--o{ TRANSACTIONS : "logs"
+    ACCOUNTS ||--o{ TRANSACTIONS : "has"
+    CATEGORIES ||--o{ TRANSACTIONS : "categorizes"`,
+
+      'diagram-seq': `sequenceDiagram
+    autonumber
+    actor User as User
+    participant Page as Transfer Page
+    participant API as Next.js API
+    participant DB as SQLite via Drizzle
+
+    User->>Page: Fill transfer form - Account A to B - 500 THB
+    Page->>Page: Client-side validation
+    Page->>API: POST /api/transactions/transfer
+    activate API
+    API->>API: Verify session via NextAuth
+    alt Unauthenticated
+        API-->>Page: 401 Unauthorized
+    else Authenticated
+        API->>DB: BEGIN transaction
+        activate DB
+        DB->>DB: Check Account A balance
+        alt Insufficient balance
+            DB-->>API: ROLLBACK
+            API-->>Page: 400 Insufficient funds
+        else Sufficient balance
+            DB->>DB: Account A balance -= 500
+            DB->>DB: Account B balance += 500
+            DB->>DB: INSERT transaction record
+            DB-->>API: COMMIT
+            deactivate DB
+            API-->>Page: 200 Transfer success
+        end
+    end
+    deactivate API
+    Page->>User: Show success notification and update UI`
+    };
+
+    /* ── Zoom State ── */
+    const zoomState = { arch: 1.5, erd: 1.5, seq: 1.5 };
+    const ZOOM_MIN = 0.4;
+    const ZOOM_MAX = 3.0;
+    const DEFAULT_ZOOM = 1.5;
+
+    function applyZoom(key) {
+      const inner = document.getElementById('inner-' + key);
+      const label = document.getElementById('zoom-label-' + key);
+      if (!inner || !label) return;
+      inner.style.transform = 'scale(' + zoomState[key] + ')';
+      label.textContent = Math.round(zoomState[key] * 100) + '%';
+    }
+
+    function zoom(key, delta) {
+      let next = zoomState[key] + delta;
+      next = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, next));
+      zoomState[key] = Math.round(next * 10) / 10;
+      applyZoom(key);
+    }
+
+    function zoomReset(key) {
+      zoomState[key] = DEFAULT_ZOOM;
+      applyZoom(key);
+    }
+
+    /* ── Mouse Wheel Zoom ── */
+    ['arch', 'erd', 'seq'].forEach(function(key) {
+      var vp = document.getElementById('viewport-' + key);
+      if (vp) {
+        vp.addEventListener('wheel', function(e) {
+          if (e.ctrlKey) {
+            e.preventDefault();
+            zoom(key, e.deltaY < 0 ? 0.1 : -0.1);
+          }
+        }, { passive: false });
+      }
+    });
+
+    /* ── Render Diagrams ── */
+    async function renderAll() {
+      for (const [id, definition] of Object.entries(diagrams)) {
+        try {
+          const { svg } = await mermaid.render(id + '-svg', definition);
+          document.getElementById(id).innerHTML = svg;
+          // Remove fixed width/height so zoom works properly
+          const svgEl = document.getElementById(id).querySelector('svg');
+          if (svgEl) {
+            svgEl.removeAttribute('width');
+            svgEl.style.width = '100%';
+            svgEl.style.height = 'auto';
+            svgEl.style.maxWidth = 'none';
+          }
+        } catch (err) {
+          console.error('Mermaid render error for ' + id, err);
+          document.getElementById(id).innerHTML =
+            '<p style="color:#f87171;">Diagram render error: ' + err.message + '</p>';
+        }
+      }
+
+      // Apply default zoom (150%)
+      applyZoom('arch');
+      applyZoom('erd');
+      applyZoom('seq');
+    }
+
+    renderAll();
+
+    /* ── Tab Switching ── */
+    function switchTab(event, tabId) {
+      document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+      document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+      document.getElementById(tabId).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+.next/
+node_modules/
+package-lock.json
+drizzle/
+local.db
+local.db-journal
+test.db
+dist/
+build/
