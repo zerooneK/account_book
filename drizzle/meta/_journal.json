@@ -8,6 +8,13 @@
       "when": 1783436233768,
       "tag": "0000_sour_amazoness",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1783439185641,
+      "tag": "0001_lean_triathlon",
+      "breakpoints": true
     }
   ]
 }

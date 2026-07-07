@@ -2,7 +2,8 @@ import { createClient } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
 import * as schema from './schema';
 import { categories } from './schema';
-import { isNull } from 'drizzle-orm';
+import { isNull, eq } from 'drizzle-orm';
+import bcrypt from 'bcryptjs';
 
 const client = createClient({
   url: process.env.DATABASE_URL || 'file:local.db',
@@ -28,6 +29,29 @@ const defaultCategories = [
 ];
 
 async function seed() {
+  // Seed Admin user
+  console.log('Seeding Admin user...');
+  const adminEmail = 'admin@accountbook.com';
+  const existingAdmin = await db
+    .select()
+    .from(schema.users)
+    .where(eq(schema.users.email, adminEmail));
+
+  if (existingAdmin.length === 0) {
+    const passwordHash = await bcrypt.hash('admin123456', 10);
+    await db.insert(schema.users).values({
+      id: 'sys-admin-user',
+      email: adminEmail,
+      passwordHash,
+      name: 'System Admin',
+      role: 'ADMIN',
+    });
+    console.log('Admin user seeded successfully!');
+  } else {
+    await db.update(schema.users).set({ role: 'ADMIN' }).where(eq(schema.users.email, adminEmail));
+    console.log('Admin user already exists, verified ADMIN role.');
+  }
+
   console.log('Clearing old system categories...');
   await db.delete(categories).where(isNull(categories.userId));
 

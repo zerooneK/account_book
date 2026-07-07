@@ -21,6 +21,10 @@ export function Navbar() {
     { href: '/categories', label: 'Categories' },
   ];
 
+  if (session?.user?.role === 'ADMIN') {
+    navItems.push({ href: '/admin', label: 'Admin' });
+  }
+
   return (
     <nav className="sticky top-0 z-50 w-full bg-slate-950/80 backdrop-blur-md border-b border-slate-900 px-4 md:px-8 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">

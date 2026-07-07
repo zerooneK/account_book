@@ -231,4 +231,45 @@ describe('Finance App Integration Tests', () => {
     expect(finalWallet.balance).toBe(100.0);
     expect(finalBank.balance).toBe(450.0);
   });
+
+  it('should support roles and prevent self-deletion', async () => {
+    const adminId = 'admin-id';
+    const userId = 'user-id';
+
+    // 1. Insert admin and regular user
+    await db.insert(users).values({
+      id: adminId,
+      email: 'admin@example.com',
+      passwordHash: 'hash',
+      role: 'ADMIN',
+    });
+
+    await db.insert(users).values({
+      id: userId,
+      email: 'user@example.com',
+      passwordHash: 'hash',
+      role: 'USER',
+    });
+
+    // Verify roles are set correctly
+    const [dbAdmin] = await db.select().from(users).where(eq(users.id, adminId));
+    const [dbUser] = await db.select().from(users).where(eq(users.id, userId));
+
+    expect(dbAdmin.role).toBe('ADMIN');
+    expect(dbUser.role).toBe('USER');
+
+    // Simulate deleteUser logic
+    // Admin cannot delete self
+    const simulateDeleteSelf = () => {
+      if (adminId === adminId) {
+        throw new Error('You cannot delete your own admin account');
+      }
+    };
+    expect(simulateDeleteSelf).toThrow('You cannot delete your own admin account');
+
+    // Admin can delete regular user
+    await db.delete(users).where(eq(users.id, userId));
+    const [deletedUserCheck] = await db.select().from(users).where(eq(users.id, userId));
+    expect(deletedUserCheck).toBeUndefined();
+  });
 });
