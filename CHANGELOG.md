@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2026-07-07
+
+### Added
+
+- Developed comprehensive Unit and Integration test suites verifying database queries, user authentication, transaction logic, and balance sync operations.
+- Successfully set up automated schema deployment and clean-up for test database files in test environment.
+- Verified that Husky and lint-staged pre-commit hooks run tests and format checks properly.
+- Successfully built optimized production package for Next.js and TailwindCSS v4 with zero TypeScript compilation warnings/errors.
+
 ## [0.5.0] - 2026-07-07
 
 ### Added
