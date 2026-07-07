@@ -10,73 +10,38 @@ const client = createClient({
 const db = drizzle(client, { schema });
 
 const defaultCategories = [
-  { id: 'sys-inc-salary', name: 'Salary', type: 'INCOME', color: '#10b981', icon: 'Briefcase' },
-  {
-    id: 'sys-inc-invest',
-    name: 'Investments',
-    type: 'INCOME',
-    color: '#3b82f6',
-    icon: 'TrendingUp',
-  },
-  {
-    id: 'sys-inc-other',
-    name: 'Others (Income)',
-    type: 'INCOME',
-    color: '#6b7280',
-    icon: 'PlusCircle',
-  },
-  {
-    id: 'sys-exp-food',
-    name: 'Food & Dining',
-    type: 'EXPENSE',
-    color: '#ef4444',
-    icon: 'Utensils',
-  },
-  { id: 'sys-exp-transport', name: 'Transport', type: 'EXPENSE', color: '#f59e0b', icon: 'Car' },
-  {
-    id: 'sys-exp-shopping',
-    name: 'Shopping',
-    type: 'EXPENSE',
-    color: '#ec4899',
-    icon: 'ShoppingBag',
-  },
+  { id: 'sys-inc-salary', name: 'Salary', type: 'INCOME', color: '#10b981', icon: '💼' },
+  { id: 'sys-inc-invest', name: 'Investments', type: 'INCOME', color: '#3b82f6', icon: '📈' },
+  { id: 'sys-inc-other', name: 'Others (Income)', type: 'INCOME', color: '#6b7280', icon: '🪙' },
+  { id: 'sys-exp-food', name: 'Food & Dining', type: 'EXPENSE', color: '#ef4444', icon: '🍔' },
+  { id: 'sys-exp-transport', name: 'Transport', type: 'EXPENSE', color: '#f59e0b', icon: '🚗' },
+  { id: 'sys-exp-shopping', name: 'Shopping', type: 'EXPENSE', color: '#ec4899', icon: '🛍️' },
   {
     id: 'sys-exp-entertainment',
     name: 'Entertainment',
     type: 'EXPENSE',
     color: '#8b5cf6',
-    icon: 'Film',
+    icon: '🎬',
   },
-  { id: 'sys-exp-utilities', name: 'Utilities', type: 'EXPENSE', color: '#06b6d4', icon: 'Zap' },
-  {
-    id: 'sys-exp-other',
-    name: 'Others (Expense)',
-    type: 'EXPENSE',
-    color: '#6b7280',
-    icon: 'MinusCircle',
-  },
+  { id: 'sys-exp-utilities', name: 'Utilities', type: 'EXPENSE', color: '#06b6d4', icon: '💡' },
+  { id: 'sys-exp-other', name: 'Others (Expense)', type: 'EXPENSE', color: '#6b7280', icon: '💸' },
 ];
 
 async function seed() {
+  console.log('Clearing old system categories...');
+  await db.delete(categories).where(isNull(categories.userId));
+
   console.log('Seeding default categories...');
   for (const cat of defaultCategories) {
-    const existing = await db
-      .select()
-      .from(categories)
-      .where(and(eq(categories.id, cat.id), isNull(categories.userId)))
-      .all(); // Use .all() to get all matches in sqlite driver
-
-    if (existing.length === 0) {
-      await db.insert(categories).values({
-        id: cat.id,
-        name: cat.name,
-        type: cat.type,
-        color: cat.color,
-        icon: cat.icon,
-        userId: null,
-      });
-      console.log(`Added system category: ${cat.name}`);
-    }
+    await db.insert(categories).values({
+      id: cat.id,
+      name: cat.name,
+      type: cat.type,
+      color: cat.color,
+      icon: cat.icon,
+      userId: null,
+    });
+    console.log(`Added system category: ${cat.name}`);
   }
   console.log('Seeding completed!');
 }
