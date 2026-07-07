@@ -150,7 +150,7 @@ export function CategoriesClient({ initialCategories }: { initialCategories: Cat
                 {cat.userId && (
                   <button
                     onClick={() => handleDelete(cat.id)}
-                    className="p-2 hover:bg-red-950/20 text-slate-500 hover:text-red-400 rounded-lg transition-all text-xs cursor-pointer"
+                    className="p-2 border border-transparent hover:border-red-500/30 hover:bg-red-500/15 text-slate-400 hover:text-red-400 rounded-xl transition-all text-xs cursor-pointer"
                     title="Delete Category"
                   >
                     🗑️
@@ -191,7 +191,7 @@ export function CategoriesClient({ initialCategories }: { initialCategories: Cat
                 {cat.userId && (
                   <button
                     onClick={() => handleDelete(cat.id)}
-                    className="p-2 hover:bg-red-950/20 text-slate-500 hover:text-red-400 rounded-lg transition-all text-xs cursor-pointer"
+                    className="p-2 border border-transparent hover:border-red-500/30 hover:bg-red-500/15 text-slate-400 hover:text-red-400 rounded-xl transition-all text-xs cursor-pointer"
                     title="Delete Category"
                   >
                     🗑️

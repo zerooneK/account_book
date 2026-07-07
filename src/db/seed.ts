@@ -2,7 +2,7 @@ import { createClient } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
 import * as schema from './schema';
 import { categories } from './schema';
-import { eq, isNull, and } from 'drizzle-orm';
+import { isNull } from 'drizzle-orm';
 
 const client = createClient({
   url: process.env.DATABASE_URL || 'file:local.db',
