@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-07-07
+
+### Added
+
+- Developed Server Actions for Category CRUD operations (`createCategory`, `deleteCategory`).
+- Developed Server Actions for Transaction logging (`createTransaction`, `deleteTransaction`) wrapped inside database transactions.
+- Implemented balance synchronization logic (updating account balances when transactions are created or deleted, including transfers).
+- Created Categories Config UI (`/categories`) supporting preset colors/emojis and custom category addition.
+- Created Transactions Registry UI (`/transactions`) featuring record creation form, tabular list, and filtering (by account, type, or query).
+
 ## [0.4.0] - 2026-07-07
 
 ### Added
