@@ -1,7 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { createTransaction, deleteTransaction } from '@/app/actions/transactions';
+import {
+  createTransaction,
+  deleteTransaction,
+  updateTransaction,
+} from '@/app/actions/transactions';
 
 type Account = {
   id: string;
@@ -47,6 +51,7 @@ export function TransactionsClient({
 }: TransactionsClientProps) {
   const [transactions] = useState<Transaction[]>(initialTransactions);
   const [modalOpen, setModalOpen] = useState(false);
+  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
 
   // Filter states
   const [filterAccount, setFilterAccount] = useState('ALL');
@@ -70,6 +75,7 @@ export function TransactionsClient({
   };
 
   const handleOpenCreate = () => {
+    setEditingTransaction(null);
     setAmount('');
     setDescription('');
     setDate(new Date().toISOString().split('T')[0]);
@@ -79,6 +85,20 @@ export function TransactionsClient({
     setCategoryId(matchingCats[0]?.id || '');
     setFromAccountId(accounts[0]?.id || '');
     setToAccountId(accounts[1]?.id || accounts[0]?.id || '');
+    setError(null);
+    setModalOpen(true);
+  };
+
+  const handleOpenEdit = (tx: Transaction) => {
+    setEditingTransaction(tx);
+    setType(tx.type);
+    setAmount(tx.amount.toString());
+    setDescription(tx.description || '');
+    setDate(new Date(tx.date).toISOString().split('T')[0]);
+    setAccountId(tx.accountId || '');
+    setCategoryId(tx.categoryId || '');
+    setFromAccountId(tx.fromAccountId || '');
+    setToAccountId(tx.toAccountId || '');
     setError(null);
     setModalOpen(true);
   };
@@ -114,7 +134,11 @@ export function TransactionsClient({
     };
 
     try {
-      await createTransaction(payload);
+      if (editingTransaction) {
+        await updateTransaction(editingTransaction.id, payload);
+      } else {
+        await createTransaction(payload);
+      }
       setModalOpen(false);
       refreshPage();
     } catch (err) {
@@ -332,8 +356,15 @@ export function TransactionsClient({
                     </div>
 
                     <button
+                      onClick={() => handleOpenEdit(tx)}
+                      className="p-2 border border-transparent hover:border-sky-500/30 hover:bg-sky-500/15 text-slate-400 hover:text-sky-400 rounded-xl transition-all text-xs cursor-pointer"
+                      title="Edit Record"
+                    >
+                      ✏️
+                    </button>
+                    <button
                       onClick={() => handleDelete(tx.id)}
-                      className="p-2 hover:bg-red-950/20 text-slate-600 hover:text-red-400 rounded-lg transition-all text-xs cursor-pointer"
+                      className="p-2 border border-transparent hover:border-red-500/30 hover:bg-red-500/15 text-slate-400 hover:text-red-400 rounded-xl transition-all text-xs cursor-pointer"
                       title="Delete Record"
                     >
                       🗑️
@@ -350,7 +381,9 @@ export function TransactionsClient({
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="w-full max-w-md bg-slate-900/95 border border-slate-800 rounded-3xl p-6 shadow-2xl animate-fadeIn relative">
-            <h2 className="text-xl font-bold text-slate-100 mb-6">Create New Record</h2>
+            <h2 className="text-xl font-bold text-slate-100 mb-6">
+              {editingTransaction ? 'Edit Record' : 'Create New Record'}
+            </h2>
 
             {/* Type selector tabs */}
             <div className="flex gap-1.5 p-1 bg-slate-950 border border-slate-850 rounded-xl mb-6">
@@ -511,6 +544,8 @@ export function TransactionsClient({
                 >
                   {loading ? (
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : editingTransaction ? (
+                    'Save Changes'
                   ) : (
                     'Add Transaction'
                   )}

@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-07-07
+
+### Added
+
+- Developed `updateTransaction` Server Action executing safe updates of transaction parameters.
+- Implemented double balance-synchronization transaction logic: automatically reverting old transaction balance impacts before applying new ones (including changes to amount, account, or type).
+- Integrated transaction edit modal and "Edit" button (`✏️`) into the Transactions Registry UI (`/transactions`).
+- Added comprehensive integration test case verifying transaction edit balance synchronization logic.
+
 ## [1.0.3] - 2026-07-07
 
 ### Fixed

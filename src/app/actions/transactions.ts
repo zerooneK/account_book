@@ -167,3 +167,142 @@ export async function deleteTransaction(id: string) {
   revalidatePath('/');
   return { success: true };
 }
+
+export async function updateTransaction(
+  id: string,
+  formData: {
+    amount: number;
+    type: string; // INCOME, EXPENSE, TRANSFER
+    description?: string;
+    date: Date;
+    accountId?: string | null;
+    categoryId?: string | null;
+    fromAccountId?: string | null;
+    toAccountId?: string | null;
+  },
+) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    throw new Error('Unauthorized');
+  }
+
+  const { amount, type, description, date, accountId, categoryId, fromAccountId, toAccountId } =
+    formData;
+
+  if (amount <= 0) {
+    throw new Error('Amount must be greater than zero');
+  }
+
+  await db.transaction(async (tx) => {
+    // 1. Fetch the OLD transaction details
+    const [oldTx] = await tx
+      .select()
+      .from(transactions)
+      .where(and(eq(transactions.id, id), eq(transactions.userId, session.user.id)));
+
+    if (!oldTx) {
+      throw new Error('Transaction not found');
+    }
+
+    // 2. Revert OLD balances
+    if (oldTx.type === 'INCOME') {
+      if (oldTx.accountId) {
+        const [acc] = await tx.select().from(accounts).where(eq(accounts.id, oldTx.accountId));
+        if (acc) {
+          await tx
+            .update(accounts)
+            .set({ balance: acc.balance - oldTx.amount })
+            .where(eq(accounts.id, oldTx.accountId));
+        }
+      }
+    } else if (oldTx.type === 'EXPENSE') {
+      if (oldTx.accountId) {
+        const [acc] = await tx.select().from(accounts).where(eq(accounts.id, oldTx.accountId));
+        if (acc) {
+          await tx
+            .update(accounts)
+            .set({ balance: acc.balance + oldTx.amount })
+            .where(eq(accounts.id, oldTx.accountId));
+        }
+      }
+    } else if (oldTx.type === 'TRANSFER') {
+      if (oldTx.fromAccountId && oldTx.toAccountId) {
+        const [fromAcc] = await tx
+          .select()
+          .from(accounts)
+          .where(eq(accounts.id, oldTx.fromAccountId));
+        const [toAcc] = await tx.select().from(accounts).where(eq(accounts.id, oldTx.toAccountId));
+        if (fromAcc) {
+          await tx
+            .update(accounts)
+            .set({ balance: fromAcc.balance + oldTx.amount })
+            .where(eq(accounts.id, oldTx.fromAccountId));
+        }
+        if (toAcc) {
+          await tx
+            .update(accounts)
+            .set({ balance: toAcc.balance - oldTx.amount })
+            .where(eq(accounts.id, oldTx.toAccountId));
+        }
+      }
+    }
+
+    // 3. Apply NEW balances
+    if (type === 'INCOME') {
+      if (!accountId) throw new Error('Account is required for income');
+      const [acc] = await tx.select().from(accounts).where(eq(accounts.id, accountId));
+      if (!acc) throw new Error('Account not found');
+      await tx
+        .update(accounts)
+        .set({ balance: acc.balance + amount })
+        .where(eq(accounts.id, accountId));
+    } else if (type === 'EXPENSE') {
+      if (!accountId) throw new Error('Account is required for expense');
+      const [acc] = await tx.select().from(accounts).where(eq(accounts.id, accountId));
+      if (!acc) throw new Error('Account not found');
+      await tx
+        .update(accounts)
+        .set({ balance: acc.balance - amount })
+        .where(eq(accounts.id, accountId));
+    } else if (type === 'TRANSFER') {
+      if (!fromAccountId || !toAccountId) {
+        throw new Error('Source and destination accounts are required for transfer');
+      }
+      if (fromAccountId === toAccountId) {
+        throw new Error('Source and destination accounts cannot be the same');
+      }
+      const [fromAcc] = await tx.select().from(accounts).where(eq(accounts.id, fromAccountId));
+      const [toAcc] = await tx.select().from(accounts).where(eq(accounts.id, toAccountId));
+      if (!fromAcc || !toAcc) throw new Error('Accounts not found');
+
+      await tx
+        .update(accounts)
+        .set({ balance: fromAcc.balance - amount })
+        .where(eq(accounts.id, fromAccountId));
+      await tx
+        .update(accounts)
+        .set({ balance: toAcc.balance + amount })
+        .where(eq(accounts.id, toAccountId));
+    }
+
+    // 4. Update the transaction record
+    await tx
+      .update(transactions)
+      .set({
+        amount,
+        type,
+        description: description || null,
+        date: new Date(date),
+        accountId: type !== 'TRANSFER' ? accountId : null,
+        categoryId: type !== 'TRANSFER' ? categoryId : null,
+        fromAccountId: type === 'TRANSFER' ? fromAccountId : null,
+        toAccountId: type === 'TRANSFER' ? toAccountId : null,
+      })
+      .where(eq(transactions.id, id));
+  });
+
+  revalidatePath('/transactions');
+  revalidatePath('/accounts');
+  revalidatePath('/');
+  return { success: true };
+}

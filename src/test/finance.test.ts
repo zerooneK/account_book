@@ -145,4 +145,90 @@ describe('Finance App Integration Tests', () => {
     expect(finalFromAcc.balance).toBe(800.0);
     expect(finalToAcc.balance).toBe(600.0);
   });
+
+  it('should revert old balances and apply new balances on transaction update', async () => {
+    const userId = 'user-2';
+    await db.insert(users).values({
+      id: userId,
+      email: 'user2@example.com',
+      passwordHash: 'hash',
+    });
+
+    const accId1 = 'acc-1';
+    const accId2 = 'acc-2';
+
+    await db.insert(accounts).values({
+      id: accId1,
+      name: 'Wallet',
+      type: 'CASH',
+      balance: 100.0,
+      userId,
+    });
+
+    await db.insert(accounts).values({
+      id: accId2,
+      name: 'Bank',
+      type: 'BANK',
+      balance: 500.0,
+      userId,
+    });
+
+    // Create INCOME of 100 on Wallet
+    const txId = 'tx-update-test';
+    await db.transaction(async (tx) => {
+      await tx.insert(transactions).values({
+        id: txId,
+        amount: 100.0,
+        type: 'INCOME',
+        date: new Date(),
+        userId,
+        accountId: accId1,
+      });
+
+      const [acc] = await tx.select().from(accounts).where(eq(accounts.id, accId1));
+      await tx
+        .update(accounts)
+        .set({ balance: acc.balance + 100.0 })
+        .where(eq(accounts.id, accId1));
+    });
+
+    const [acc1] = await db.select().from(accounts).where(eq(accounts.id, accId1));
+    expect(acc1.balance).toBe(200.0);
+
+    // Now edit transaction to be an EXPENSE of 50 on Bank
+    await db.transaction(async (tx) => {
+      // 1. Fetch old transaction
+      const [oldTx] = await tx.select().from(transactions).where(eq(transactions.id, txId));
+
+      // 2. Revert old INCOME of 100 on Wallet
+      const [wallet] = await tx.select().from(accounts).where(eq(accounts.id, oldTx.accountId!));
+      await tx
+        .update(accounts)
+        .set({ balance: wallet.balance - oldTx.amount })
+        .where(eq(accounts.id, oldTx.accountId!));
+
+      // 3. Apply new EXPENSE of 50 on Bank
+      const [bank] = await tx.select().from(accounts).where(eq(accounts.id, accId2));
+      await tx
+        .update(accounts)
+        .set({ balance: bank.balance - 50.0 })
+        .where(eq(accounts.id, accId2));
+
+      // 4. Update transaction
+      await tx
+        .update(transactions)
+        .set({
+          amount: 50.0,
+          type: 'EXPENSE',
+          accountId: accId2,
+        })
+        .where(eq(transactions.id, txId));
+    });
+
+    const [finalWallet] = await db.select().from(accounts).where(eq(accounts.id, accId1));
+    const [finalBank] = await db.select().from(accounts).where(eq(accounts.id, accId2));
+
+    expect(finalWallet.balance).toBe(100.0);
+    expect(finalBank.balance).toBe(450.0);
+  });
 });
