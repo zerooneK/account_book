@@ -203,10 +203,10 @@ export function TransactionsClient({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-slate-100 to-slate-400 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-slate-800 to-slate-950 dark:from-slate-100 dark:to-slate-400 bg-clip-text text-transparent">
             Transactions Registry
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-505 dark:text-slate-400 text-sm mt-1">
             Log financial operations, income, expenses, or transfers
           </p>
         </div>
@@ -219,7 +219,7 @@ export function TransactionsClient({
       </div>
 
       {/* Filter Toolbar */}
-      <div className="bg-slate-900/40 border border-slate-900 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 backdrop-blur-sm">
+      <div className="bg-white/80 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-900 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 backdrop-blur-sm">
         <div className="flex flex-wrap items-center gap-3">
           {/* Account Filter */}
           <div className="flex flex-col">
@@ -227,7 +227,7 @@ export function TransactionsClient({
             <select
               value={filterAccount}
               onChange={(e) => setFilterAccount(e.target.value)}
-              className="px-3.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-300 focus:outline-none focus:border-sky-500"
+              className="px-3.5 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700 focus:outline-none focus:border-sky-500 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-300"
             >
               <option value="ALL">All Accounts</option>
               {accounts.map((a) => (
@@ -244,7 +244,7 @@ export function TransactionsClient({
             <select
               value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
-              className="px-3.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-300 focus:outline-none focus:border-sky-500"
+              className="px-3.5 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700 focus:outline-none focus:border-sky-500 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-300"
             >
               <option value="ALL">All Types</option>
               <option value="INCOME">Income (💰)</option>
@@ -264,14 +264,16 @@ export function TransactionsClient({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Type search terms..."
-            className="px-3.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-300 focus:outline-none focus:border-sky-500 placeholder-slate-600"
+            className="px-3.5 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700 focus:outline-none focus:border-sky-500 placeholder-slate-400 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-300 dark:placeholder-slate-650"
           />
         </div>
       </div>
 
       {/* Stats Summary from Filtered */}
-      <div className="bg-slate-950/40 border border-slate-900/60 rounded-2xl p-4 flex items-center justify-between">
-        <span className="text-xs text-slate-400 font-medium">Filtered Total Flow:</span>
+      <div className="bg-slate-50 border border-slate-200/80 dark:bg-slate-950/40 dark:border-slate-900/60 rounded-2xl p-4 flex items-center justify-between">
+        <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+          Filtered Total Flow:
+        </span>
         <span
           className={`font-mono font-bold text-sm sm:text-base ${
             getFilteredTotal() >= 0 ? 'text-emerald-400' : 'text-rose-400'
@@ -287,14 +289,16 @@ export function TransactionsClient({
       </div>
 
       {/* Transactions Registry List */}
-      <div className="bg-slate-900/40 border border-slate-900 rounded-3xl p-6 shadow-lg backdrop-blur-sm">
+      <div className="bg-white/80 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-900 rounded-3xl p-6 shadow-lg backdrop-blur-sm">
         {filteredTransactions.length === 0 ? (
           <div className="text-center py-16">
             <span className="text-3xl block mb-2">🔍</span>
-            <p className="text-slate-400 text-sm">No transactions match your filters</p>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">
+              No transactions match your filters
+            </p>
           </div>
         ) : (
-          <div className="divide-y divide-slate-950">
+          <div className="divide-y divide-slate-100 dark:divide-slate-950">
             {filteredTransactions.map((tx) => {
               const isIncome = tx.type === 'INCOME';
               const isExpense = tx.type === 'EXPENSE';
@@ -304,13 +308,13 @@ export function TransactionsClient({
                 <div key={tx.id} className="py-4 flex items-center justify-between gap-4">
                   {/* Left: Info details */}
                   <div className="flex items-center gap-3">
-                    <span className="text-lg p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/40">
+                    <span className="text-lg p-2.5 rounded-xl bg-slate-100/80 border border-slate-200/60 dark:bg-slate-950/60 dark:border-slate-800/40">
                       {isIncome && '💰'}
                       {isExpense && '📉'}
                       {isTransfer && '⇄'}
                     </span>
                     <div>
-                      <p className="font-bold text-slate-100 text-sm sm:text-base leading-tight">
+                      <p className="font-bold text-slate-900 dark:text-slate-100 text-sm sm:text-base leading-tight">
                         {tx.description || tx.category?.name || 'No Description'}
                       </p>
                       <span className="text-xs text-slate-500 font-medium">
@@ -357,14 +361,14 @@ export function TransactionsClient({
 
                     <button
                       onClick={() => handleOpenEdit(tx)}
-                      className="p-2 border border-transparent hover:border-sky-500/30 hover:bg-sky-500/15 text-slate-400 hover:text-sky-400 rounded-xl transition-all text-xs cursor-pointer"
+                      className="p-2 border border-transparent hover:border-sky-500/30 hover:bg-sky-500/15 text-slate-500 hover:text-sky-655 dark:text-slate-400 dark:hover:text-sky-400 rounded-xl transition-all text-xs cursor-pointer"
                       title="Edit Record"
                     >
                       ✏️
                     </button>
                     <button
                       onClick={() => handleDelete(tx.id)}
-                      className="p-2 border border-transparent hover:border-red-500/30 hover:bg-red-500/15 text-slate-400 hover:text-red-400 rounded-xl transition-all text-xs cursor-pointer"
+                      className="p-2 border border-transparent hover:border-red-500/30 hover:bg-red-500/15 text-slate-500 hover:text-red-655 dark:text-slate-400 dark:hover:text-red-400 rounded-xl transition-all text-xs cursor-pointer"
                       title="Delete Record"
                     >
                       🗑️
@@ -380,13 +384,13 @@ export function TransactionsClient({
       {/* Modal for transaction creation */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-slate-900/95 border border-slate-800 rounded-3xl p-6 shadow-2xl animate-fadeIn relative">
-            <h2 className="text-xl font-bold text-slate-100 mb-6">
+          <div className="w-full max-w-md bg-white/95 border border-slate-200 dark:bg-slate-900/95 dark:border-slate-800 rounded-3xl p-6 shadow-2xl animate-fadeIn relative">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-6">
               {editingTransaction ? 'Edit Record' : 'Create New Record'}
             </h2>
 
             {/* Type selector tabs */}
-            <div className="flex gap-1.5 p-1 bg-slate-950 border border-slate-850 rounded-xl mb-6">
+            <div className="flex gap-1.5 p-1 bg-slate-100 border border-slate-200 dark:bg-slate-950 dark:border-slate-850 rounded-xl mb-6">
               {['EXPENSE', 'INCOME', 'TRANSFER'].map((t) => (
                 <button
                   key={t}
@@ -394,8 +398,8 @@ export function TransactionsClient({
                   onClick={() => handleTypeChange(t)}
                   className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
                     type === t
-                      ? 'bg-sky-400 text-bg-primary text-black font-bold'
-                      : 'text-slate-400'
+                      ? 'bg-sky-400 text-slate-950 dark:bg-sky-400 dark:text-black font-bold'
+                      : 'text-slate-500 dark:text-slate-450'
                   }`}
                 >
                   {t === 'EXPENSE' && 'Expense 📉'}
@@ -414,7 +418,9 @@ export function TransactionsClient({
 
               {/* Amount input */}
               <div>
-                <label className="block text-slate-300 text-xs font-medium mb-1.5">Amount</label>
+                <label className="block text-slate-700 dark:text-slate-300 text-xs font-medium mb-1.5">
+                  Amount
+                </label>
                 <div className="relative">
                   <input
                     type="number"
@@ -423,7 +429,7 @@ export function TransactionsClient({
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     placeholder="0.00"
-                    className="w-full pl-4 pr-12 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm font-mono transition-all"
+                    className="w-full pl-4 pr-12 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm font-mono transition-all dark:bg-slate-950/80 dark:border-slate-800 dark:text-slate-100"
                   />
                   <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                     <span className="text-slate-500 text-xs font-semibold">THB</span>
@@ -435,13 +441,13 @@ export function TransactionsClient({
               {type !== 'TRANSFER' ? (
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-slate-300 text-xs font-medium mb-1.5">
+                    <label className="block text-slate-700 dark:text-slate-300 text-xs font-medium mb-1.5">
                       Account
                     </label>
                     <select
                       value={accountId}
                       onChange={(e) => setAccountId(e.target.value)}
-                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 focus:outline-none focus:border-sky-500 text-sm"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-sky-500 text-sm dark:bg-slate-950/80 dark:border-slate-800 dark:text-slate-100"
                     >
                       {accounts.map((a) => (
                         <option key={a.id} value={a.id}>
@@ -451,13 +457,13 @@ export function TransactionsClient({
                     </select>
                   </div>
                   <div>
-                    <label className="block text-slate-300 text-xs font-medium mb-1.5">
+                    <label className="block text-slate-700 dark:text-slate-300 text-xs font-medium mb-1.5">
                       Category
                     </label>
                     <select
                       value={categoryId}
                       onChange={(e) => setCategoryId(e.target.value)}
-                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 focus:outline-none focus:border-sky-500 text-sm"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-sky-500 text-sm dark:bg-slate-950/80 dark:border-slate-800 dark:text-slate-100"
                     >
                       {categories
                         .filter((c) => c.type === type)
@@ -472,11 +478,13 @@ export function TransactionsClient({
               ) : (
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-slate-300 text-xs font-medium mb-1.5">From</label>
+                    <label className="block text-slate-700 dark:text-slate-300 text-xs font-medium mb-1.5">
+                      From
+                    </label>
                     <select
                       value={fromAccountId}
                       onChange={(e) => setFromAccountId(e.target.value)}
-                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 focus:outline-none focus:border-sky-500 text-sm"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-sky-500 text-sm dark:bg-slate-950/80 dark:border-slate-800 dark:text-slate-100"
                     >
                       {accounts.map((a) => (
                         <option key={a.id} value={a.id}>
@@ -486,11 +494,13 @@ export function TransactionsClient({
                     </select>
                   </div>
                   <div>
-                    <label className="block text-slate-300 text-xs font-medium mb-1.5">To</label>
+                    <label className="block text-slate-700 dark:text-slate-300 text-xs font-medium mb-1.5">
+                      To
+                    </label>
                     <select
                       value={toAccountId}
                       onChange={(e) => setToAccountId(e.target.value)}
-                      className="w-full px-3 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 focus:outline-none focus:border-sky-500 text-sm"
+                      className="w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-sky-500 text-sm dark:bg-slate-950/80 dark:border-slate-800 dark:text-slate-100"
                     >
                       {accounts.map((a) => (
                         <option key={a.id} value={a.id}>
@@ -504,7 +514,7 @@ export function TransactionsClient({
 
               {/* Description */}
               <div>
-                <label className="block text-slate-300 text-xs font-medium mb-1.5">
+                <label className="block text-slate-700 dark:text-slate-300 text-xs font-medium mb-1.5">
                   Description
                 </label>
                 <input
@@ -512,28 +522,30 @@ export function TransactionsClient({
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="e.g., Dinner with family, Uber ride"
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm transition-all dark:bg-slate-950/80 dark:border-slate-800 dark:text-slate-100"
                 />
               </div>
 
               {/* Date */}
               <div>
-                <label className="block text-slate-300 text-xs font-medium mb-1.5">Date</label>
+                <label className="block text-slate-700 dark:text-slate-300 text-xs font-medium mb-1.5">
+                  Date
+                </label>
                 <input
                   type="date"
                   required
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm font-sans"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm font-sans dark:bg-slate-950/80 dark:border-slate-800 dark:text-slate-100"
                 />
               </div>
 
               {/* Modal footer controls */}
-              <div className="flex gap-3 mt-8 pt-4 border-t border-slate-800/60">
+              <div className="flex gap-3 mt-8 pt-4 border-t border-slate-200 dark:border-slate-800/60">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="flex-1 py-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:bg-slate-900 text-sm font-semibold text-slate-400 transition-all cursor-pointer"
+                  className="flex-1 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-650 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-900 text-sm font-semibold dark:text-slate-400 transition-all cursor-pointer"
                 >
                   Cancel
                 </button>

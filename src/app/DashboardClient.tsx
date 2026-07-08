@@ -108,10 +108,10 @@ export function DashboardClient({
     <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 w-full space-y-8">
       {/* Welcome Title */}
       <div>
-        <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-slate-100 to-slate-400 bg-clip-text text-transparent">
+        <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-slate-800 to-slate-950 dark:from-slate-100 dark:to-slate-400 bg-clip-text text-transparent">
           Financial Dashboard
         </h1>
-        <p className="text-slate-400 text-sm mt-1">
+        <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
           Overview of your asset balances and monthly progress
         </p>
       </div>
@@ -119,47 +119,49 @@ export function DashboardClient({
       {/* ── Summary Cards Grid ── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Total Net Balance Card */}
-        <div className="bg-gradient-to-br from-slate-900/60 to-slate-950/80 border border-slate-900 rounded-3xl p-6 shadow-xl relative overflow-hidden">
+        <div className="bg-gradient-to-br from-white to-slate-50 border border-slate-200/80 dark:from-slate-900/60 dark:to-slate-950/80 dark:border-slate-900 rounded-3xl p-6 shadow-xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-sky-500/5 to-transparent rounded-bl-full pointer-events-none" />
-          <span className="text-slate-500 text-xs font-bold uppercase tracking-wider">
+          <span className="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">
             Total Net Balance
           </span>
-          <p className="text-3xl font-black text-slate-100 font-mono mt-2 tracking-tight">
+          <p className="text-3xl font-black text-slate-900 dark:text-slate-100 font-mono mt-2 tracking-tight">
             {formatCurrency(netWorth)}{' '}
-            <span className="text-sky-400 text-base font-bold font-sans">THB</span>
+            <span className="text-sky-400 dark:text-sky-400 text-base font-bold font-sans">
+              THB
+            </span>
           </p>
-          <div className="mt-4 text-xs text-slate-400 flex items-center gap-1.5">
+          <div className="mt-4 text-xs text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
             <span>Across {accounts.length} active accounts</span>
           </div>
         </div>
 
         {/* Monthly Income Card */}
-        <div className="bg-gradient-to-br from-slate-900/60 to-slate-950/80 border border-slate-900 rounded-3xl p-6 shadow-xl relative overflow-hidden">
+        <div className="bg-gradient-to-br from-white to-slate-50 border border-slate-200/80 dark:from-slate-900/60 dark:to-slate-950/80 dark:border-slate-900 rounded-3xl p-6 shadow-xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-emerald-500/5 to-transparent rounded-bl-full pointer-events-none" />
-          <span className="text-slate-500 text-xs font-bold uppercase tracking-wider">
+          <span className="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">
             This Month Income
           </span>
           <p className="text-3xl font-black text-emerald-400 font-mono mt-2 tracking-tight">
             +{formatCurrency(monthlyIncome)}{' '}
             <span className="text-emerald-500 text-base font-bold font-sans">THB</span>
           </p>
-          <div className="mt-4 text-xs text-slate-400 flex items-center gap-1">
+          <div className="mt-4 text-xs text-slate-600 dark:text-slate-400 flex items-center gap-1">
             <span className="text-emerald-500">💰</span>
             <span>Monthly inflows total</span>
           </div>
         </div>
 
         {/* Monthly Expense Card */}
-        <div className="bg-gradient-to-br from-slate-900/60 to-slate-950/80 border border-slate-900 rounded-3xl p-6 shadow-xl relative overflow-hidden">
+        <div className="bg-gradient-to-br from-white to-slate-50 border border-slate-200/80 dark:from-slate-900/60 dark:to-slate-950/80 dark:border-slate-900 rounded-3xl p-6 shadow-xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-rose-500/5 to-transparent rounded-bl-full pointer-events-none" />
-          <span className="text-slate-500 text-xs font-bold uppercase tracking-wider">
+          <span className="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">
             This Month Expense
           </span>
           <p className="text-3xl font-black text-rose-400 font-mono mt-2 tracking-tight">
             -{formatCurrency(monthlyExpense)}{' '}
             <span className="text-rose-500 text-base font-bold font-sans">THB</span>
           </p>
-          <div className="mt-4 text-xs text-slate-400 flex items-center gap-1">
+          <div className="mt-4 text-xs text-slate-600 dark:text-slate-400 flex items-center gap-1">
             <span className="text-rose-500">📉</span>
             <span>Monthly outflows total</span>
           </div>
@@ -170,12 +172,14 @@ export function DashboardClient({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column: Recent Transactions (Span 2) */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-slate-900/40 border border-slate-900 rounded-3xl p-6 shadow-lg backdrop-blur-sm">
-            <div className="flex items-center justify-between mb-6 pb-3 border-b border-slate-950">
-              <h2 className="text-lg font-bold text-slate-100">Recent Transactions</h2>
+          <div className="bg-white/80 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-900 rounded-3xl p-6 shadow-lg backdrop-blur-sm">
+            <div className="flex items-center justify-between mb-6 pb-3 border-b border-slate-100 dark:border-slate-950">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+                Recent Transactions
+              </h2>
               <Link
                 href="/transactions"
-                className="text-xs font-semibold text-sky-400 hover:text-sky-300 transition-colors"
+                className="text-xs font-semibold text-sky-550 dark:text-sky-400 hover:text-sky-600 dark:hover:text-sky-300 transition-colors"
               >
                 View All &rarr;
               </Link>
@@ -184,16 +188,18 @@ export function DashboardClient({
             {recentTransactions.length === 0 ? (
               <div className="text-center py-16">
                 <span className="text-3xl block mb-3">📝</span>
-                <p className="text-slate-400 text-sm">No recent transactions logged</p>
+                <p className="text-slate-500 dark:text-slate-400 text-sm">
+                  No recent transactions logged
+                </p>
                 <Link
                   href="/transactions"
-                  className="mt-4 inline-block text-xs font-semibold px-4 py-2 bg-slate-800 text-slate-300 rounded-lg hover:bg-slate-700 transition-all"
+                  className="mt-4 inline-block text-xs font-semibold px-4 py-2 bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 rounded-lg transition-all"
                 >
                   Create First Record
                 </Link>
               </div>
             ) : (
-              <div className="divide-y divide-slate-950">
+              <div className="divide-y divide-slate-100 dark:divide-slate-950">
                 {recentTransactions.map((tx) => {
                   const isIncome = tx.type === 'INCOME';
                   const isExpense = tx.type === 'EXPENSE';
@@ -203,13 +209,13 @@ export function DashboardClient({
                     <div key={tx.id} className="py-4 flex items-center justify-between gap-4">
                       {/* Left: Type / Info */}
                       <div className="flex items-center gap-3">
-                        <span className="text-lg p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/40">
+                        <span className="text-lg p-2.5 rounded-xl bg-slate-100/80 border border-slate-200/60 dark:bg-slate-950/60 dark:border-slate-800/40">
                           {isIncome && '💰'}
                           {isExpense && '📉'}
                           {isTransfer && '⇄'}
                         </span>
                         <div>
-                          <p className="font-bold text-slate-100 text-sm sm:text-base leading-tight">
+                          <p className="font-bold text-slate-900 dark:text-slate-100 text-sm sm:text-base leading-tight">
                             {tx.description || tx.category?.name || 'No Description'}
                           </p>
                           <span className="text-xs text-slate-500 font-medium">
@@ -255,51 +261,63 @@ export function DashboardClient({
         {/* Right Column: Category Breakdown & Actions (Span 1) */}
         <div className="space-y-6">
           {/* Quick Actions Card */}
-          <div className="bg-slate-900/40 border border-slate-900 rounded-3xl p-6 shadow-lg backdrop-blur-sm">
-            <h2 className="text-lg font-bold text-slate-100 mb-4">Quick Actions</h2>
+          <div className="bg-white/80 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-900 rounded-3xl p-6 shadow-lg backdrop-blur-sm">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4">
+              Quick Actions
+            </h2>
             <div className="grid grid-cols-2 gap-3">
               <Link
                 href="/transactions"
-                className="flex flex-col items-center justify-center p-4 rounded-2xl bg-slate-950/50 border border-slate-800 hover:border-sky-500/40 hover:bg-slate-900/50 transition-all text-center group cursor-pointer"
+                className="flex flex-col items-center justify-center p-4 rounded-2xl bg-slate-50 border border-slate-200/85 hover:border-sky-500/40 hover:bg-slate-100/50 dark:bg-slate-950/50 dark:border-slate-800 dark:hover:border-sky-500/40 dark:hover:bg-slate-900/50 transition-all text-center group cursor-pointer"
               >
                 <span className="text-2xl mb-1.5 transition-transform group-hover:scale-110 duration-200">
                   📝
                 </span>
-                <span className="text-xs font-semibold text-slate-300">Add Record</span>
+                <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  Add Record
+                </span>
               </Link>
               <Link
                 href="/accounts"
-                className="flex flex-col items-center justify-center p-4 rounded-2xl bg-slate-950/50 border border-slate-800 hover:border-indigo-500/40 hover:bg-slate-900/50 transition-all text-center group cursor-pointer"
+                className="flex flex-col items-center justify-center p-4 rounded-2xl bg-slate-50 border border-slate-200/85 hover:border-indigo-500/40 hover:bg-slate-100/50 dark:bg-slate-950/50 dark:border-slate-800 dark:hover:border-indigo-500/40 dark:hover:bg-slate-900/50 transition-all text-center group cursor-pointer"
               >
                 <span className="text-2xl mb-1.5 transition-transform group-hover:scale-110 duration-200">
                   🏦
                 </span>
-                <span className="text-xs font-semibold text-slate-300">New Account</span>
+                <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  New Account
+                </span>
               </Link>
               <Link
                 href="/categories"
-                className="flex flex-col items-center justify-center p-4 rounded-2xl bg-slate-950/50 border border-slate-800 hover:border-emerald-500/40 hover:bg-slate-900/50 transition-all text-center group cursor-pointer"
+                className="flex flex-col items-center justify-center p-4 rounded-2xl bg-slate-50 border border-slate-200/85 hover:border-emerald-500/40 hover:bg-slate-100/50 dark:bg-slate-950/50 dark:border-slate-800 dark:hover:border-emerald-500/40 dark:hover:bg-slate-900/50 transition-all text-center group cursor-pointer"
               >
                 <span className="text-2xl mb-1.5 transition-transform group-hover:scale-110 duration-200">
                   🏷️
                 </span>
-                <span className="text-xs font-semibold text-slate-300">Categories</span>
+                <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  Categories
+                </span>
               </Link>
               <Link
                 href="/transactions?type=TRANSFER"
-                className="flex flex-col items-center justify-center p-4 rounded-2xl bg-slate-950/50 border border-slate-800 hover:border-amber-500/40 hover:bg-slate-900/50 transition-all text-center group cursor-pointer"
+                className="flex flex-col items-center justify-center p-4 rounded-2xl bg-slate-50 border border-slate-200/85 hover:border-amber-500/40 hover:bg-slate-100/50 dark:bg-slate-950/50 dark:border-slate-800 dark:hover:border-amber-500/40 dark:hover:bg-slate-900/50 transition-all text-center group cursor-pointer"
               >
                 <span className="text-2xl mb-1.5 transition-transform group-hover:scale-110 duration-200">
                   ⇄
                 </span>
-                <span className="text-xs font-semibold text-slate-300">Transfer</span>
+                <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  Transfer
+                </span>
               </Link>
             </div>
           </div>
 
           {/* Spending Category Breakdown Card */}
-          <div className="bg-slate-900/40 border border-slate-900 rounded-3xl p-6 shadow-lg backdrop-blur-sm">
-            <h2 className="text-lg font-bold text-slate-100 mb-4">Expense by Category</h2>
+          <div className="bg-white/80 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-900 rounded-3xl p-6 shadow-lg backdrop-blur-sm">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4">
+              Expense by Category
+            </h2>
 
             {categoryBreakdown.length === 0 ? (
               <div className="text-center py-10">
@@ -317,18 +335,18 @@ export function DashboardClient({
                   return (
                     <div key={idx} className="space-y-1">
                       <div className="flex items-center justify-between text-xs font-medium">
-                        <span className="text-slate-300 flex items-center gap-1.5">
+                        <span className="text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
                           <span
                             className="w-2.5 h-2.5 rounded-full inline-block"
                             style={{ backgroundColor: cat.color }}
                           />
                           {cat.name}
                         </span>
-                        <span className="text-slate-400 font-mono">
+                        <span className="text-slate-500 dark:text-slate-400 font-mono">
                           {formatCurrency(cat.amount)} THB ({Math.round(percentage)}%)
                         </span>
                       </div>
-                      <div className="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden">
+                      <div className="w-full bg-slate-100 dark:bg-slate-950 h-1.5 rounded-full overflow-hidden">
                         <div
                           className="h-full rounded-full transition-all duration-500"
                           style={{

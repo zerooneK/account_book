@@ -96,10 +96,10 @@ export function CategoriesClient({ initialCategories }: { initialCategories: Cat
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-slate-100 to-slate-400 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-slate-800 to-slate-950 dark:from-slate-100 dark:to-slate-400 bg-clip-text text-transparent">
             Categories Configuration
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-505 dark:text-slate-400 text-sm mt-1">
             Configure transaction tags, colors, and icons
           </p>
         </div>
@@ -121,8 +121,8 @@ export function CategoriesClient({ initialCategories }: { initialCategories: Cat
       {/* Main categories view split */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Expense Categories */}
-        <div className="bg-slate-900/40 border border-slate-900 rounded-3xl p-6 shadow-lg backdrop-blur-sm space-y-6">
-          <h2 className="text-lg font-bold text-rose-400 pb-2 border-b border-slate-950 flex items-center gap-2">
+        <div className="bg-white/80 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-900 rounded-3xl p-6 shadow-lg backdrop-blur-sm space-y-6">
+          <h2 className="text-lg font-bold text-rose-400 pb-2 border-b border-slate-100 dark:border-slate-950 flex items-center gap-2">
             <span>📉</span> Expense Categories
           </h2>
 
@@ -130,17 +130,19 @@ export function CategoriesClient({ initialCategories }: { initialCategories: Cat
             {expenseCategories.map((cat) => (
               <div
                 key={cat.id}
-                className="bg-slate-950/40 border border-slate-800/40 hover:border-slate-800 rounded-2xl p-4 flex items-center justify-between transition-all"
+                className="bg-slate-50 border border-slate-200/80 dark:bg-slate-950/40 dark:border-slate-800/40 hover:border-slate-300 dark:hover:border-slate-800 rounded-2xl p-4 flex items-center justify-between transition-all"
               >
                 <div className="flex items-center gap-3">
                   <span
-                    className="text-xl p-2 rounded-xl flex items-center justify-center border border-slate-800/40 shadow-inner"
+                    className="text-xl p-2 rounded-xl flex items-center justify-center border border-slate-200/50 dark:border-slate-800/40 shadow-inner"
                     style={{ backgroundColor: `${cat.color}15`, color: cat.color || '#fff' }}
                   >
                     {cat.icon || '🏷️'}
                   </span>
                   <div>
-                    <h3 className="font-bold text-sm text-slate-200">{cat.name}</h3>
+                    <h3 className="font-bold text-sm text-slate-900 dark:text-slate-200">
+                      {cat.name}
+                    </h3>
                     <span className="text-3xs text-slate-500 uppercase font-bold tracking-wider">
                       {cat.userId ? 'Custom' : 'System Default'}
                     </span>
@@ -162,8 +164,8 @@ export function CategoriesClient({ initialCategories }: { initialCategories: Cat
         </div>
 
         {/* Income Categories */}
-        <div className="bg-slate-900/40 border border-slate-900 rounded-3xl p-6 shadow-lg backdrop-blur-sm space-y-6">
-          <h2 className="text-lg font-bold text-emerald-400 pb-2 border-b border-slate-950 flex items-center gap-2">
+        <div className="bg-white/80 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-900 rounded-3xl p-6 shadow-lg backdrop-blur-sm space-y-6">
+          <h2 className="text-lg font-bold text-emerald-400 pb-2 border-b border-slate-100 dark:border-slate-950 flex items-center gap-2">
             <span>💰</span> Income Categories
           </h2>
 
@@ -171,17 +173,19 @@ export function CategoriesClient({ initialCategories }: { initialCategories: Cat
             {incomeCategories.map((cat) => (
               <div
                 key={cat.id}
-                className="bg-slate-950/40 border border-slate-800/40 hover:border-slate-800 rounded-2xl p-4 flex items-center justify-between transition-all"
+                className="bg-slate-50 border border-slate-200/80 dark:bg-slate-950/40 dark:border-slate-800/40 hover:border-slate-300 dark:hover:border-slate-800 rounded-2xl p-4 flex items-center justify-between transition-all"
               >
                 <div className="flex items-center gap-3">
                   <span
-                    className="text-xl p-2 rounded-xl flex items-center justify-center border border-slate-800/40 shadow-inner"
+                    className="text-xl p-2 rounded-xl flex items-center justify-center border border-slate-200/50 dark:border-slate-800/40 shadow-inner"
                     style={{ backgroundColor: `${cat.color}15`, color: cat.color || '#fff' }}
                   >
                     {cat.icon || '🏷️'}
                   </span>
                   <div>
-                    <h3 className="font-bold text-sm text-slate-200">{cat.name}</h3>
+                    <h3 className="font-bold text-sm text-slate-900 dark:text-slate-200">
+                      {cat.name}
+                    </h3>
                     <span className="text-3xs text-slate-500 uppercase font-bold tracking-wider">
                       {cat.userId ? 'Custom' : 'System Default'}
                     </span>
@@ -206,8 +210,10 @@ export function CategoriesClient({ initialCategories }: { initialCategories: Cat
       {/* Modal for category creation */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-slate-900/95 border border-slate-800 rounded-3xl p-6 shadow-2xl animate-fadeIn relative">
-            <h2 className="text-xl font-bold text-slate-100 mb-6">Create Custom Category</h2>
+          <div className="w-full max-w-md bg-white/95 border border-slate-200 dark:bg-slate-900/95 dark:border-slate-800 rounded-3xl p-6 shadow-2xl animate-fadeIn relative">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-6">
+              Create Custom Category
+            </h2>
 
             <form onSubmit={handleSubmit} className="space-y-5">
               {error && (
@@ -217,7 +223,7 @@ export function CategoriesClient({ initialCategories }: { initialCategories: Cat
               )}
 
               <div>
-                <label className="block text-slate-300 text-xs font-medium mb-1.5 font-sans">
+                <label className="block text-slate-700 dark:text-slate-300 text-xs font-medium mb-1.5 font-sans">
                   Category Name
                 </label>
                 <input
@@ -226,18 +232,18 @@ export function CategoriesClient({ initialCategories }: { initialCategories: Cat
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g., Subscriptions, Pet Food"
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 dark:bg-slate-950/80 dark:border-slate-800 dark:text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-300 text-xs font-medium mb-1.5">
+                <label className="block text-slate-700 dark:text-slate-300 text-xs font-medium mb-1.5">
                   Category Type
                 </label>
                 <select
                   value={type}
                   onChange={(e) => setType(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 dark:bg-slate-950/80 dark:border-slate-800 dark:text-slate-100 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm transition-all"
                 >
                   <option value="EXPENSE">Expense (📉)</option>
                   <option value="INCOME">Income (💰)</option>
@@ -245,7 +251,7 @@ export function CategoriesClient({ initialCategories }: { initialCategories: Cat
               </div>
 
               <div>
-                <label className="block text-slate-300 text-xs font-medium mb-2">
+                <label className="block text-slate-700 dark:text-slate-300 text-xs font-medium mb-2">
                   Select Color
                 </label>
                 <div className="grid grid-cols-6 gap-2">
@@ -256,7 +262,7 @@ export function CategoriesClient({ initialCategories }: { initialCategories: Cat
                       onClick={() => setColor(c)}
                       className={`h-9 w-9 rounded-xl transition-all cursor-pointer ${
                         color === c
-                          ? 'ring-2 ring-white scale-110 shadow-lg'
+                          ? 'ring-2 ring-slate-900 dark:ring-white scale-110 shadow-lg'
                           : 'opacity-80 hover:opacity-100'
                       }`}
                       style={{ backgroundColor: c }}
@@ -266,7 +272,7 @@ export function CategoriesClient({ initialCategories }: { initialCategories: Cat
               </div>
 
               <div>
-                <label className="block text-slate-300 text-xs font-medium mb-2">
+                <label className="block text-slate-700 dark:text-slate-300 text-xs font-medium mb-2">
                   Select Icon / Emoji
                 </label>
                 <div className="grid grid-cols-6 gap-2 mb-3">
@@ -275,10 +281,10 @@ export function CategoriesClient({ initialCategories }: { initialCategories: Cat
                       key={e}
                       type="button"
                       onClick={() => setIcon(e)}
-                      className={`h-9 w-9 rounded-xl bg-slate-950/80 border flex items-center justify-center text-lg transition-all cursor-pointer ${
+                      className={`h-9 w-9 rounded-xl bg-slate-50 border flex items-center justify-center text-lg transition-all cursor-pointer ${
                         icon === e
                           ? 'border-sky-500 ring-1 ring-sky-500 scale-110 shadow-lg'
-                          : 'border-slate-800 hover:border-slate-700'
+                          : 'border-slate-200 hover:border-slate-350 dark:bg-slate-950/80 dark:border-slate-800 dark:hover:border-slate-700'
                       }`}
                     >
                       {e}
@@ -293,16 +299,16 @@ export function CategoriesClient({ initialCategories }: { initialCategories: Cat
                     maxLength={2}
                     value={icon}
                     onChange={(e) => setIcon(e.target.value)}
-                    className="w-12 text-center py-1 rounded bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:border-sky-500"
+                    className="w-12 text-center py-1 rounded bg-slate-50 border border-slate-200 text-slate-900 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:border-sky-500"
                   />
                 </div>
               </div>
 
-              <div className="flex gap-3 mt-8 pt-4 border-t border-slate-800/60">
+              <div className="flex gap-3 mt-8 pt-4 border-t border-slate-200 dark:border-slate-800/60">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="flex-1 py-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:bg-slate-900 text-sm font-semibold text-slate-400 transition-all cursor-pointer"
+                  className="flex-1 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-650 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-900 text-sm font-semibold dark:text-slate-400 transition-all cursor-pointer"
                 >
                   Cancel
                 </button>

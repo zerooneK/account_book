@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-07-08
+
+### Added
+
+- Implemented dynamic Theme Switcher system supporting Light and Dark modes.
+- Created `ThemeProvider` React Context to persist theme states in `localStorage`.
+- Designed an animated Theme Toggle button on the Navbar with a custom SVG Gooey Filter effect.
+- Updated styling of all client page components (Dashboard, Accounts, Categories, Transactions, Admin Panel, Sign In, Sign Up) to look premium in both Light and Dark modes.
+- Added LangChain OpenWiki documentation CLI scripts (`openwiki:init`, `openwiki:update`, `openwiki:chat`) to `package.json`.
+- Configured automated `.github/workflows/openwiki-update.yml` GitHub Actions pipeline to run documentation checks and updates.
+- Added documentation for OpenRouter API keys, model variables, and LangSmith tracing in `README.md`.
+- Created unit tests verifying theme state changes, body class mutations, and persistence.
+
 ## [1.2.0] - 2026-07-07
 
 ### Added

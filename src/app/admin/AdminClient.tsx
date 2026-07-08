@@ -112,10 +112,12 @@ export function AdminClient({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-slate-100 to-slate-400 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-slate-800 to-slate-950 dark:from-slate-100 dark:to-slate-400 bg-clip-text text-transparent">
             System Administration
           </h1>
-          <p className="text-slate-400 text-sm mt-1">Manage database users, roles, and accounts</p>
+          <p className="text-slate-505 dark:text-slate-400 text-sm mt-1">
+            Manage database users, roles, and accounts
+          </p>
         </div>
         <button
           onClick={handleOpenCreate}
@@ -126,8 +128,8 @@ export function AdminClient({
       </div>
 
       {/* Users List Card/Table */}
-      <div className="bg-slate-900/40 border border-slate-900 rounded-3xl p-6 shadow-lg backdrop-blur-sm overflow-hidden">
-        <h2 className="text-lg font-bold text-slate-100 mb-6 pb-3 border-b border-slate-950 flex items-center gap-2">
+      <div className="bg-white/80 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-900 rounded-3xl p-6 shadow-lg backdrop-blur-sm overflow-hidden">
+        <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-6 pb-3 border-b border-slate-100 dark:border-slate-950 flex items-center gap-2">
           <span>👥</span> Registered Users ({usersList.length})
         </h2>
 
@@ -135,14 +137,14 @@ export function AdminClient({
         <div className="overflow-x-auto w-full">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-slate-950 text-slate-400 text-xs font-bold uppercase tracking-wider">
+              <tr className="border-b border-slate-100 dark:border-slate-950 text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">
                 <th className="pb-4 pr-4">User Info</th>
                 <th className="pb-4 px-4">Role</th>
                 <th className="pb-4 px-4">Joined Date</th>
                 <th className="pb-4 pl-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-950/60">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-950/60">
               {usersList.map((user) => {
                 const isSelf = user.id === currentUserId;
                 const isAdmin = user.role === 'ADMIN';
@@ -150,18 +152,20 @@ export function AdminClient({
                 return (
                   <tr
                     key={user.id}
-                    className="text-slate-200 text-sm hover:bg-slate-950/20 transition-all"
+                    className="text-slate-700 dark:text-slate-200 text-sm hover:bg-slate-50 dark:hover:bg-slate-950/20 transition-all"
                   >
                     {/* User Info */}
                     <td className="py-4 pr-4 flex items-center gap-3">
-                      <div className="h-9 w-9 rounded-xl bg-slate-950/65 flex items-center justify-center font-bold text-slate-400 border border-slate-850">
+                      <div className="h-9 w-9 rounded-xl bg-slate-100 dark:bg-slate-950/65 flex items-center justify-center font-bold text-slate-550 dark:text-slate-400 border border-slate-200 dark:border-slate-850">
                         {user.name ? user.name.substring(0, 2).toUpperCase() : 'U'}
                       </div>
                       <div>
-                        <p className="font-bold text-slate-100 leading-tight">
+                        <p className="font-bold text-slate-900 dark:text-slate-100 leading-tight">
                           {user.name || 'Anonymous User'}
                         </p>
-                        <p className="text-slate-500 text-xs mt-0.5">{user.email}</p>
+                        <p className="text-slate-500 dark:text-slate-500 text-xs mt-0.5">
+                          {user.email}
+                        </p>
                       </div>
                     </td>
 
@@ -171,7 +175,7 @@ export function AdminClient({
                         className={`inline-block px-2.5 py-1 rounded-full text-3xs font-extrabold tracking-wider uppercase border ${
                           isAdmin
                             ? 'bg-indigo-950/30 border-indigo-500/40 text-indigo-400'
-                            : 'bg-slate-950/40 border-slate-800 text-slate-400'
+                            : 'bg-slate-100 border-slate-200 text-slate-600 dark:bg-slate-950/40 dark:border-slate-800 dark:text-slate-400'
                         }`}
                       >
                         {user.role}
@@ -179,20 +183,20 @@ export function AdminClient({
                     </td>
 
                     {/* Joined Date */}
-                    <td className="py-4 px-4 font-mono text-slate-400 text-xs">
+                    <td className="py-4 px-4 font-mono text-slate-500 dark:text-slate-400 text-xs">
                       {formatDate(user.createdAt)}
                     </td>
 
                     {/* Actions */}
                     <td className="py-4 pl-4 text-right">
                       {isSelf ? (
-                        <span className="text-xs text-slate-500 italic font-medium pr-3.5">
+                        <span className="text-xs text-slate-555 dark:text-slate-500 italic font-medium pr-3.5">
                           Logged In (Self)
                         </span>
                       ) : (
                         <button
                           onClick={() => handleDelete(user.id, user.email)}
-                          className="p-2 border border-transparent hover:border-red-500/30 hover:bg-red-500/15 text-slate-500 hover:text-red-400 rounded-xl transition-all text-xs cursor-pointer inline-block"
+                          className="p-2 border border-transparent hover:border-red-500/30 hover:bg-red-500/15 text-slate-500 hover:text-red-655 dark:text-slate-400 dark:hover:text-red-400 rounded-xl transition-all text-xs cursor-pointer inline-block"
                           title="Delete User"
                         >
                           🗑️ Delete
@@ -210,8 +214,10 @@ export function AdminClient({
       {/* Modal for User Creation */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-slate-900/95 border border-slate-800 rounded-3xl p-6 shadow-2xl animate-fadeIn relative">
-            <h2 className="text-xl font-bold text-slate-100 mb-6">Create New User Account</h2>
+          <div className="w-full max-w-md bg-white/95 border border-slate-200 dark:bg-slate-900/95 dark:border-slate-800 rounded-3xl p-6 shadow-2xl animate-fadeIn relative">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-6">
+              Create New User Account
+            </h2>
 
             <form onSubmit={handleSubmit} className="space-y-5">
               {error && (
@@ -221,18 +227,20 @@ export function AdminClient({
               )}
 
               <div>
-                <label className="block text-slate-300 text-xs font-medium mb-1.5">Full Name</label>
+                <label className="block text-slate-705 dark:text-slate-300 text-xs font-medium mb-1.5">
+                  Full Name
+                </label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g., John Doe"
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-505 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm transition-all dark:bg-slate-950/80 dark:border-slate-800 dark:text-slate-100"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-300 text-xs font-medium mb-1.5">
+                <label className="block text-slate-705 dark:text-slate-300 text-xs font-medium mb-1.5">
                   Email Address
                 </label>
                 <input
@@ -241,12 +249,12 @@ export function AdminClient({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@example.com"
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-550 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm transition-all dark:bg-slate-950/80 dark:border-slate-800 dark:text-slate-100"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-300 text-xs font-medium mb-1.5 font-sans">
+                <label className="block text-slate-705 dark:text-slate-300 text-xs font-medium mb-1.5 font-sans">
                   Password
                 </label>
                 <input
@@ -255,27 +263,29 @@ export function AdminClient({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="At least 6 characters"
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-550 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm transition-all dark:bg-slate-950/80 dark:border-slate-800 dark:text-slate-100"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-300 text-xs font-medium mb-1.5">User Role</label>
+                <label className="block text-slate-705 dark:text-slate-300 text-xs font-medium mb-1.5">
+                  User Role
+                </label>
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm transition-all dark:bg-slate-950/80 dark:border-slate-800 dark:text-slate-100"
                 >
                   <option value="USER">Regular User (USER)</option>
                   <option value="ADMIN">Administrator (ADMIN)</option>
                 </select>
               </div>
 
-              <div className="flex gap-3 mt-8 pt-4 border-t border-slate-800/60">
+              <div className="flex gap-3 mt-8 pt-4 border-t border-slate-200 dark:border-slate-800/60">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="flex-1 py-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:bg-slate-900 text-sm font-semibold text-slate-400 transition-all cursor-pointer"
+                  className="flex-1 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-650 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-900 text-sm font-semibold dark:text-slate-400 transition-all cursor-pointer"
                 >
                   Cancel
                 </button>

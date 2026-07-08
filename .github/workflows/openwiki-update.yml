@@ -1,0 +1,57 @@
+name: OpenWiki Update
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  workflow_dispatch:
+  schedule:
+    # Run weekly at midnight on Sunday
+    - cron: '0 0 * * 0'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install OpenWiki
+        run: npm install --global openwiki
+
+      - name: Run OpenWiki Update
+        run: openwiki --update --print
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENWIKI_MODEL_ID: "tencent/hy3:free"
+          # Optional LangSmith Tracing
+          LANGCHAIN_TRACING_V2: ${{ secrets.LANGCHAIN_TRACING_V2 }}
+          LANGCHAIN_API_KEY: ${{ secrets.LANGCHAIN_API_KEY }}
+          LANGCHAIN_PROJECT: ${{ secrets.LANGCHAIN_PROJECT }}
+
+      - name: Commit and Push Changes (if any)
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Check if there are changes in openwiki/ or AGENTS.md
+          if [ -n "$(git status --porcelain openwiki AGENTS.md)" ]; then
+            echo "Changes detected in documentation. Committing..."
+            git add openwiki/ AGENTS.md
+            git commit -m "docs: auto-update codebase documentation via OpenWiki [skip ci]"
+            git push origin HEAD:${{ github.ref_name }}
+          else
+            echo "No documentation changes detected."
+          fi

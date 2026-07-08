@@ -138,10 +138,10 @@ export function AccountsClient({ initialAccounts }: { initialAccounts: Account[]
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-slate-100 to-slate-400 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-slate-800 to-slate-950 dark:from-slate-100 dark:to-slate-400 bg-clip-text text-transparent">
             Accounts Management
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
             Create and manage your liquid assets and credit lines
           </p>
         </div>
@@ -155,15 +155,17 @@ export function AccountsClient({ initialAccounts }: { initialAccounts: Account[]
 
       {/* Grid of Accounts */}
       {accounts.length === 0 ? (
-        <div className="text-center py-16 bg-slate-900/20 border border-slate-900 rounded-3xl backdrop-blur-sm">
+        <div className="text-center py-16 bg-white/80 dark:bg-slate-900/20 border border-slate-200/80 dark:border-slate-900 rounded-3xl backdrop-blur-sm">
           <div className="text-4xl mb-4">🏦</div>
-          <h3 className="text-slate-200 font-semibold text-lg">No accounts created yet</h3>
-          <p className="text-slate-400 text-sm mt-1 mb-6">
+          <h3 className="text-slate-900 dark:text-slate-200 font-semibold text-lg">
+            No accounts created yet
+          </h3>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1 mb-6">
             Create your first account to start tracking transactions
           </p>
           <button
             onClick={handleOpenCreate}
-            className="px-4 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-semibold transition-all cursor-pointer"
+            className="px-4 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 text-sm font-semibold transition-all cursor-pointer"
           >
             Create Account
           </button>
@@ -173,7 +175,7 @@ export function AccountsClient({ initialAccounts }: { initialAccounts: Account[]
           {accounts.map((acc) => (
             <div
               key={acc.id}
-              className="bg-slate-900/40 border border-slate-900/80 rounded-2xl p-6 flex flex-col justify-between shadow-lg backdrop-blur-sm hover:border-slate-800/80 transition-all relative overflow-hidden group"
+              className="bg-white/80 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-900/80 rounded-2xl p-6 flex flex-col justify-between shadow-lg backdrop-blur-sm hover:border-slate-350 dark:hover:border-slate-800/80 transition-all relative overflow-hidden group"
             >
               {/* Highlight gradient */}
               <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-sky-500/5 to-transparent rounded-bl-full pointer-events-none" />
@@ -181,11 +183,13 @@ export function AccountsClient({ initialAccounts }: { initialAccounts: Account[]
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/50">
+                    <span className="text-2xl p-2.5 rounded-xl bg-slate-100/80 border border-slate-200/60 dark:bg-slate-950/60 dark:border-slate-800/50">
                       {getAccountIcon(acc.type)}
                     </span>
                     <div>
-                      <h3 className="font-bold text-slate-100 text-lg leading-tight">{acc.name}</h3>
+                      <h3 className="font-bold text-slate-900 dark:text-slate-100 text-lg leading-tight">
+                        {acc.name}
+                      </h3>
                       <span className="text-xs text-slate-500 font-medium">
                         {getAccountTypeLabel(acc.type)}
                       </span>
@@ -194,30 +198,32 @@ export function AccountsClient({ initialAccounts }: { initialAccounts: Account[]
                 </div>
 
                 <div className="mt-4">
-                  <span className="text-xs text-slate-500 uppercase tracking-wider font-semibold">
+                  <span className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">
                     Current Balance
                   </span>
-                  <p className="text-2xl font-black text-slate-100 font-mono tracking-tight mt-1">
+                  <p className="text-2xl font-black text-slate-900 dark:text-slate-100 font-mono tracking-tight mt-1">
                     {acc.balance.toLocaleString('en-US', {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}{' '}
-                    <span className="text-sky-400 font-sans text-base font-bold">THB</span>
+                    <span className="text-sky-400 dark:text-sky-400 font-sans text-base font-bold">
+                      THB
+                    </span>
                   </p>
                 </div>
               </div>
 
               {/* Actions */}
-              <div className="flex gap-2.5 mt-8 border-t border-slate-950 pt-4">
+              <div className="flex gap-2.5 mt-8 border-t border-slate-100 dark:border-slate-950 pt-4">
                 <button
                   onClick={() => handleOpenEdit(acc)}
-                  className="flex-1 py-2 rounded-lg bg-slate-950/60 hover:bg-slate-800 border border-slate-800/60 hover:border-slate-700 text-xs font-semibold text-slate-300 transition-all cursor-pointer"
+                  className="flex-1 py-2 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 hover:border-slate-300 text-slate-700 dark:bg-slate-950/60 dark:hover:bg-slate-800 dark:border-slate-800/60 dark:hover:border-slate-700 text-xs font-semibold dark:text-slate-300 transition-all cursor-pointer"
                 >
                   Edit Account
                 </button>
                 <button
                   onClick={() => handleDelete(acc.id)}
-                  className="py-2 px-3 rounded-lg border border-red-950/40 hover:border-red-900/60 bg-red-950/10 hover:bg-red-950/30 text-xs font-semibold text-red-400 hover:text-red-300 transition-all cursor-pointer"
+                  className="py-2 px-3 rounded-lg border border-red-200 hover:border-red-300 bg-red-50 hover:bg-red-100 text-red-650 dark:border-red-950/40 dark:hover:border-red-900/60 dark:bg-red-950/10 dark:hover:bg-red-950/30 text-xs font-semibold dark:text-red-400 dark:hover:text-red-300 transition-all cursor-pointer"
                 >
                   🗑️
                 </button>
@@ -230,8 +236,8 @@ export function AccountsClient({ initialAccounts }: { initialAccounts: Account[]
       {/* Account Modal */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-slate-900/95 border border-slate-800 rounded-3xl p-6 shadow-2xl animate-fadeIn relative">
-            <h2 className="text-xl font-bold text-slate-100 mb-6">
+          <div className="w-full max-w-md bg-white/95 border border-slate-200 dark:bg-slate-900/95 dark:border-slate-800 rounded-3xl p-6 shadow-2xl animate-fadeIn relative">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-6">
               {editingAccount ? 'Edit Account' : 'Add New Account'}
             </h2>
 
@@ -243,7 +249,7 @@ export function AccountsClient({ initialAccounts }: { initialAccounts: Account[]
               )}
 
               <div>
-                <label className="block text-slate-300 text-xs font-medium mb-1.5">
+                <label className="block text-slate-700 dark:text-slate-300 text-xs font-medium mb-1.5">
                   Account Name
                 </label>
                 <input
@@ -252,18 +258,18 @@ export function AccountsClient({ initialAccounts }: { initialAccounts: Account[]
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g., Cash, K-Bank Savings"
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 dark:bg-slate-950/80 dark:border-slate-800 dark:text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-300 text-xs font-medium mb-1.5">
+                <label className="block text-slate-700 dark:text-slate-300 text-xs font-medium mb-1.5">
                   Account Type
                 </label>
                 <select
                   value={type}
                   onChange={(e) => setType(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 dark:bg-slate-950/80 dark:border-slate-800 dark:text-slate-100 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm transition-all"
                 >
                   <option value="BANK">Bank Account (🏦)</option>
                   <option value="CASH">Cash (💰)</option>
@@ -272,7 +278,7 @@ export function AccountsClient({ initialAccounts }: { initialAccounts: Account[]
               </div>
 
               <div>
-                <label className="block text-slate-300 text-xs font-medium mb-1.5">
+                <label className="block text-slate-700 dark:text-slate-300 text-xs font-medium mb-1.5">
                   {editingAccount ? 'Adjust Balance' : 'Initial Balance'}
                 </label>
                 <div className="relative">
@@ -283,7 +289,7 @@ export function AccountsClient({ initialAccounts }: { initialAccounts: Account[]
                     value={balance}
                     onChange={(e) => setBalance(e.target.value)}
                     placeholder="0.00"
-                    className="w-full pl-4 pr-12 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm font-mono transition-all"
+                    className="w-full pl-4 pr-12 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 dark:bg-slate-950/80 dark:border-slate-800 dark:text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm font-mono transition-all"
                   />
                   <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                     <span className="text-slate-500 text-xs font-semibold">THB</span>
@@ -291,11 +297,11 @@ export function AccountsClient({ initialAccounts }: { initialAccounts: Account[]
                 </div>
               </div>
 
-              <div className="flex gap-3 mt-8 pt-4 border-t border-slate-800/60">
+              <div className="flex gap-3 mt-8 pt-4 border-t border-slate-200 dark:border-slate-800/60">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="flex-1 py-2.5 rounded-xl border border-slate-800 bg-slate-950 hover:bg-slate-900 text-sm font-semibold text-slate-400 transition-all cursor-pointer"
+                  className="flex-1 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-650 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-900 text-sm font-semibold dark:text-slate-400 transition-all cursor-pointer"
                 >
                   Cancel
                 </button>

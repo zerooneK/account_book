@@ -47,7 +47,7 @@ export default function SignUp() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#070b19] relative overflow-hidden px-4">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 transition-colors duration-300 relative overflow-hidden px-4">
       {/* Decorative background glows */}
       <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-sky-500/10 blur-[100px] pointer-events-none" />
       <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-500/10 blur-[100px] pointer-events-none" />
@@ -58,14 +58,16 @@ export default function SignUp() {
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-400 to-indigo-500 shadow-lg shadow-sky-500/30 mb-4">
             <span className="text-white text-2xl font-bold font-mono">฿</span>
           </div>
-          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-sky-400 via-indigo-400 to-indigo-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-slate-800 to-slate-950 dark:from-sky-400 dark:via-indigo-400 dark:to-indigo-650 bg-clip-text text-transparent">
             Create Account
           </h1>
-          <p className="text-slate-400 text-sm mt-2">Get started by setting up your profile</p>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-2">
+            Get started by setting up your profile
+          </p>
         </div>
 
         {/* Form Card */}
-        <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-8 shadow-2xl shadow-black/40">
+        <div className="bg-white/80 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200/80 dark:border-slate-880 rounded-3xl p-8 shadow-2xl shadow-black/5 dark:shadow-black/40">
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
               <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center">
@@ -74,7 +76,10 @@ export default function SignUp() {
             )}
 
             <div>
-              <label htmlFor="name" className="block text-slate-300 text-sm font-medium mb-2">
+              <label
+                htmlFor="name"
+                className="block text-slate-700 dark:text-slate-300 text-sm font-medium mb-2"
+              >
                 Full Name
               </label>
               <input
@@ -83,12 +88,15 @@ export default function SignUp() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="John Doe"
-                className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 dark:bg-slate-950/80 dark:border-slate-805 dark:text-slate-100 dark:placeholder-slate-550 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all"
               />
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-slate-300 text-sm font-medium mb-2">
+              <label
+                htmlFor="email"
+                className="block text-slate-700 dark:text-slate-300 text-sm font-medium mb-2"
+              >
                 Email Address
               </label>
               <input
@@ -98,12 +106,15 @@ export default function SignUp() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 dark:bg-slate-950/80 dark:border-slate-805 dark:text-slate-100 dark:placeholder-slate-550 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-slate-300 text-sm font-medium mb-2">
+              <label
+                htmlFor="password"
+                className="block text-slate-700 dark:text-slate-300 text-sm font-medium mb-2"
+              >
                 Password
               </label>
               <input
@@ -113,7 +124,7 @@ export default function SignUp() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="At least 6 characters"
-                className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 dark:bg-slate-950/80 dark:border-slate-805 dark:text-slate-100 dark:placeholder-slate-550 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all"
               />
             </div>
 
@@ -130,11 +141,11 @@ export default function SignUp() {
             </button>
           </form>
 
-          <div className="mt-8 text-center text-sm border-t border-slate-800/80 pt-6">
-            <span className="text-slate-400">Already have an account? </span>
+          <div className="mt-8 text-center text-sm border-t border-slate-200/60 dark:border-slate-800/80 pt-6">
+            <span className="text-slate-500 dark:text-slate-400">Already have an account? </span>
             <Link
               href="/auth/signin"
-              className="text-sky-400 font-medium hover:underline hover:text-sky-300 transition-colors"
+              className="text-sky-600 dark:text-sky-400 font-medium hover:underline hover:text-sky-500 dark:hover:text-sky-300 transition-colors"
             >
               Sign In
             </Link>
