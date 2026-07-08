@@ -181,6 +181,51 @@ npm run openwiki:init
 
 ---
 
+## 🌐 การติดตั้งใช้งานจริงบนระบบคลาวด์ (Vercel & Turso Deployment Guide)
+
+โปรเจกต์นี้ได้รับการปรับแต่งให้พร้อมสำหรับการ Deploy ขึ้นเซิร์ฟเวอร์แบบไร้เซิร์ฟเวอร์ (Serverless) บน **Vercel** และเชื่อมต่อกับฐานข้อมูล SQLite บนคลาวด์ของ **Turso** ได้อย่างรวดเร็ว
+
+### ขั้นตอนที่ 1: เตรียมฐานข้อมูล Turso (Cloud LibSQL)
+
+1. สมัครใช้งานเว็บไซต์ [Turso](https://turso.tech/) (ฟรีเทียร์ Starter Plan)
+2. สร้างฐานข้อมูลใหม่ เช่น `account-book` ด้วยการกำหนด Location ใกล้เคียง (เช่น **AWS Tokyo** หรือ **Singapore**)
+3. บันทึกค่า **DATABASE_URL** (ตัวอย่าง: `libsql://account-book-ชื่อผู้ใช้.turso.io`)
+4. สร้างโทเค็นรหัสผ่านในการเชื่อมต่อ เพื่อเอา **DATABASE_AUTH_TOKEN**
+
+### ขั้นตอนที่ 2: ตั้งค่า Vercel Deployment
+
+1. ล็อกอินเข้าใช้งาน [Vercel](https://vercel.com/) และสั่ง Import Repository นี้จาก GitHub ของคุณ
+2. ในหน้าการตั้งค่าแอปพลิเคชัน (Project Settings) ให้เพิ่ม **Environment Variables** ดังนี้:
+   - `DATABASE_URL`: ลิงก์เชื่อมต่อจาก Turso
+   - `DATABASE_AUTH_TOKEN`: โทเค็นที่ได้จาก Turso
+   - `NEXTAUTH_SECRET`: คีย์เข้ารหัสล็อกอิน โดยใช้คำสั่งสร้างสุ่มใน PowerShell:
+     ```powershell
+     [Convert]::ToBase64String((1..32 | % { [byte](Get-Random -Min 0 -Max 256) }))
+     ```
+   - `NEXTAUTH_URL`: ลิงก์โดเมนหลักของแอปคุณบน Vercel (เช่น `https://account-book.vercel.app`)
+
+### ขั้นตอนที่ 3: สั่งรันตารางข้อมูล (Migration) สู่คลาวด์
+
+ในการสร้างตารางฐานข้อมูลและลงทะเบียนแอดมินเริ่มต้นขึ้นระบบคลาวด์ ให้รันคำสั่งโดยรวม URL และ Token เข้าด้วยกันเป็น Query Parameter ในเทอร์มินัลของคุณ:
+
+```powershell
+# สำหรับ Windows (PowerShell) - รวม URL และ Token ด้วย ?authToken=
+$env:DATABASE_URL="libsql://your-db-url.turso.io?authToken=your-token"
+npx drizzle-kit push
+npx tsx src/db/seed.ts
+```
+
+หรือหากใช้ Mac/Linux (Bash):
+
+```bash
+DATABASE_URL="libsql://your-db-url.turso.io?authToken=your-token" npx drizzle-kit push
+DATABASE_URL="libsql://your-db-url.turso.io?authToken=your-token" npx tsx src/db/seed.ts
+```
+
+เมื่อดำเนินการเสร็จสิ้น เว็บไซต์ของคุณจะสามารถรันและเข้าถึงได้ตลอด 24 ชั่วโมงโดยไม่ต้องเปิดเครื่องทิ้งไว้ครับ!
+
+---
+
 ## 📐 รายละเอียดไดอะแกรมการออกแบบ (Architecture Diagrams)
 
 คุณสามารถเปิดดูแผนภาพการทำงานเชิงลึกของโปรเจกต์ ทั้งตัวแผนภาพ **System Architecture**, **ERD** (ตารางฐานข้อมูล) และ **Sequence Diagram** (การไหลของข้อมูลการโอนเงิน) ได้โดยเปิดไฟล์นี้บนเว็บเบราว์เซอร์:
