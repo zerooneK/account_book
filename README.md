@@ -80,18 +80,17 @@ npx drizzle-kit push
 
 ### 4. รัน Seed ข้อมูลระบบเริ่มต้น (Default Categories & Admin User)
 
-รันคำสั่ง Seed เพื่อลงทะเบียนข้อมูลหมวดหมู่ตั้งต้น และสร้างบัญชี Admin ตั้งต้น:
+รันคำสั่ง Seed เพื่อลงทะเบียนข้อมูลหมวดหมู่ตั้งต้น และสร้างบัญชี Admin โดยกำหนดอีเมลและรหัสผ่านผ่าน environment variable (รหัสผ่านอย่างน้อย 12 ตัวอักษร):
 
 ```bash
-npx tsx src/db/seed.ts
+ADMIN_EMAIL="you@example.com" ADMIN_PASSWORD="รหัสผ่านของคุณ" npx tsx src/db/seed.ts
 ```
 
 > [!IMPORTANT]
-> **บัญชีผู้ดูแลระบบเริ่มต้น (Default Admin Credentials):**
+> สคริปต์ Seed ไม่มีรหัสผ่านตั้งต้นอยู่ในโค้ดและจะหยุดทำงานถ้าไม่ได้ตั้งค่าทั้งสองตัวแปร
 >
-> - **Email:** `admin@accountbook.com`
-> - **Password:** `admin123456`
-> - _เมื่อเข้าสู่ระบบแล้ว เมนู "Admin" จะปรากฏบนแถบนำทาง (Navbar) เพื่อจัดการผู้ใช้ได้ทันที_
+> - เมื่อเข้าสู่ระบบแล้ว เมนู "Admin" จะปรากฏบนแถบนำทาง (Navbar) เพื่อจัดการผู้ใช้ได้ทันที
+> - ในโหมด production ต้องตั้ง `NEXTAUTH_SECRET` ด้วย ไม่เช่นนั้นระบบล็อกอินจะไม่ทำงาน
 
 ### 5. เปิดใช้งาน Local Development Server
 

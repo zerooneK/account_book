@@ -2,7 +2,7 @@ import { createClient } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
 import * as schema from './schema';
 import { categories } from './schema';
-import { isNull, eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
 
 const client = createClient({
@@ -28,44 +28,60 @@ const defaultCategories = [
   { id: 'sys-exp-other', name: 'Others (Expense)', type: 'EXPENSE', color: '#6b7280', icon: '💸' },
 ];
 
-async function seed() {
-  // Seed Admin user
-  console.log('Seeding Admin user...');
-  const adminEmail = 'admin@accountbook.com';
-  const existingAdmin = await db
-    .select()
-    .from(schema.users)
-    .where(eq(schema.users.email, adminEmail));
+const ADMIN_USER_ID = 'sys-admin-user';
 
-  if (existingAdmin.length === 0) {
-    const passwordHash = await bcrypt.hash('admin123456', 10);
+async function seed() {
+  // Seed Admin user — credentials come from the environment, never from source.
+  const adminEmail = process.env.ADMIN_EMAIL;
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  if (!adminEmail || !adminPassword) {
+    throw new Error('ADMIN_EMAIL and ADMIN_PASSWORD must be set to seed the admin user');
+  }
+  if (adminPassword.length < 12) {
+    throw new Error('ADMIN_PASSWORD must be at least 12 characters');
+  }
+
+  console.log('Seeding Admin user...');
+  const [existing] = await db.select().from(schema.users).where(eq(schema.users.email, adminEmail));
+
+  if (!existing) {
+    const passwordHash = await bcrypt.hash(adminPassword, 10);
     await db.insert(schema.users).values({
-      id: 'sys-admin-user',
+      id: ADMIN_USER_ID,
       email: adminEmail,
       passwordHash,
       name: 'System Admin',
       role: 'ADMIN',
     });
     console.log('Admin user seeded successfully!');
-  } else {
-    await db.update(schema.users).set({ role: 'ADMIN' }).where(eq(schema.users.email, adminEmail));
+  } else if (existing.id === ADMIN_USER_ID) {
+    await db.update(schema.users).set({ role: 'ADMIN' }).where(eq(schema.users.id, ADMIN_USER_ID));
     console.log('Admin user already exists, verified ADMIN role.');
+  } else {
+    // Someone registered this address before the seed ran; do not promote them.
+    throw new Error(
+      `${adminEmail} is already registered by a regular user; choose another ADMIN_EMAIL`,
+    );
   }
 
-  console.log('Clearing old system categories...');
-  await db.delete(categories).where(isNull(categories.userId));
-
+  // Upsert so existing transactions keep their category links on re-runs.
   console.log('Seeding default categories...');
   for (const cat of defaultCategories) {
-    await db.insert(categories).values({
-      id: cat.id,
-      name: cat.name,
-      type: cat.type,
-      color: cat.color,
-      icon: cat.icon,
-      userId: null,
-    });
-    console.log(`Added system category: ${cat.name}`);
+    await db
+      .insert(categories)
+      .values({
+        id: cat.id,
+        name: cat.name,
+        type: cat.type,
+        color: cat.color,
+        icon: cat.icon,
+        userId: null,
+      })
+      .onConflictDoUpdate({
+        target: categories.id,
+        set: { name: cat.name, type: cat.type, color: cat.color, icon: cat.icon },
+      });
+    console.log(`Upserted system category: ${cat.name}`);
   }
   console.log('Seeding completed!');
 }

@@ -3,9 +3,53 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { db } from '@/db';
-import { transactions, accounts } from '@/db/schema';
-import { eq, and } from 'drizzle-orm';
+import { transactions, accounts, categories } from '@/db/schema';
+import { eq, and, or, isNull } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
+
+const TRANSACTION_TYPES = ['INCOME', 'EXPENSE', 'TRANSFER'];
+
+type DbTx = Parameters<Parameters<typeof db.transaction>[0]>[0];
+
+function validateInput(type: string, amount: number) {
+  if (!TRANSACTION_TYPES.includes(type)) {
+    throw new Error('Invalid transaction type');
+  }
+  if (!Number.isFinite(amount) || amount <= 0) {
+    throw new Error('Amount must be greater than zero');
+  }
+}
+
+// Every referenced account must belong to the caller; a category must be a system
+// category or one of the caller's own.
+async function assertOwnership(
+  tx: DbTx,
+  userId: string,
+  accountIds: (string | null | undefined)[],
+  categoryId?: string | null,
+) {
+  for (const id of accountIds) {
+    if (!id) continue;
+    const [acc] = await tx
+      .select({ id: accounts.id })
+      .from(accounts)
+      .where(and(eq(accounts.id, id), eq(accounts.userId, userId)));
+    if (!acc) throw new Error('Account not found');
+  }
+
+  if (categoryId) {
+    const [cat] = await tx
+      .select({ id: categories.id })
+      .from(categories)
+      .where(
+        and(
+          eq(categories.id, categoryId),
+          or(isNull(categories.userId), eq(categories.userId, userId)),
+        ),
+      );
+    if (!cat) throw new Error('Category not found');
+  }
+}
 
 export async function createTransaction(formData: {
   amount: number;
@@ -25,14 +69,14 @@ export async function createTransaction(formData: {
   const { amount, type, description, date, accountId, categoryId, fromAccountId, toAccountId } =
     formData;
 
-  if (amount <= 0) {
-    throw new Error('Amount must be greater than zero');
-  }
+  validateInput(type, amount);
 
   const txId = crypto.randomUUID();
 
   // Run everything in a DB transaction
   await db.transaction(async (tx) => {
+    await assertOwnership(tx, session.user.id, [accountId, fromAccountId, toAccountId], categoryId);
+
     // 1. Insert transaction record
     await tx.insert(transactions).values({
       id: txId,
@@ -189,11 +233,11 @@ export async function updateTransaction(
   const { amount, type, description, date, accountId, categoryId, fromAccountId, toAccountId } =
     formData;
 
-  if (amount <= 0) {
-    throw new Error('Amount must be greater than zero');
-  }
+  validateInput(type, amount);
 
   await db.transaction(async (tx) => {
+    await assertOwnership(tx, session.user.id, [accountId, fromAccountId, toAccountId], categoryId);
+
     // 1. Fetch the OLD transaction details
     const [oldTx] = await tx
       .select()

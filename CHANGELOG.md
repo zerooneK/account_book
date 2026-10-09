@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Security
+
+- `NEXTAUTH_SECRET` is now required in production; the hard-coded development fallback is no longer used there.
+- Seed script reads the admin credentials from `ADMIN_EMAIL` / `ADMIN_PASSWORD` (min. 12 characters) instead of source code, and refuses to promote a user who registered the admin address first.
+- Creating or editing a transaction now verifies that every referenced account belongs to the caller and that the category is a system category or the caller's own.
+
+### Fixed
+
+- Transaction `type` and `amount` are validated (unknown types and non-finite amounts are rejected).
+- Re-running the seed script no longer deletes system categories, so existing transactions keep their category.
+
+### Added
+
+- Integration tests that call the real Server Actions (transactions and admin) against a temporary database.
+
 ## [1.3.0] - 2026-07-08
 
 ### Added
@@ -24,7 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Implemented Role-Based Access Control (RBAC) with roles `'USER'` and `'ADMIN'`. Added `role` column to `users` table.
 - Extended NextAuth.js typing and configurations to return and enforce user role parameters.
-- Updated seed script `seed.ts` to insert a default Admin user (`admin@accountbook.com` / `admin123456`) and enforce roles.
+- Updated seed script `seed.ts` to insert a default Admin user and enforce roles.
 - Created Admin Server Actions (`getUsers`, `createAdminUser`, `deleteUser`) protecting endpoints using Admin session checks.
 - Integrated the Admin Panel page (`/admin`) presenting a table of all registered users and allowing creation and deletion of user records.
 - Added a conditional menu link on the global Navbar showing "Admin" options for users with the `'ADMIN'` role.

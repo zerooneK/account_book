@@ -67,5 +67,13 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: '/auth/signin',
   },
-  secret: process.env.NEXTAUTH_SECRET || 'fallback-secret-for-dev',
+  // Resolved lazily so `next build` works without the variable, but a production
+  // server never signs tokens with a publicly known fallback.
+  get secret() {
+    if (process.env.NEXTAUTH_SECRET) return process.env.NEXTAUTH_SECRET;
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('NEXTAUTH_SECRET must be set in production');
+    }
+    return 'fallback-secret-for-dev';
+  },
 };
