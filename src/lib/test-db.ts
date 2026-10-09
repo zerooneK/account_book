@@ -4,10 +4,8 @@ import { createClient } from '@libsql/client';
 import * as schema from '@/db/schema';
 import { DbType } from '@/db';
 
-export const createTestDb = () => {
-  const client = createClient({
-    url: 'file:test.db',
-  });
+export const createTestDb = (url = 'file:test.db') => {
+  const client = createClient({ url });
   return drizzle(client, { schema });
 };
 
